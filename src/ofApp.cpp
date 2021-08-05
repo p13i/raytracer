@@ -8,24 +8,26 @@
 void ofApp::setup(){
     ofBackground(0, 0, 0);  // black
     
+    ofSetFrameRate(24);
+    
     
     rt::Environment env{
         /* geometry: */ {
             /* edges: */ std::vector<rt::LineSegment>({
                 rt::LineSegment({-200, +100}, {-100, +200}),
                 rt::LineSegment({   0, +100}, {+100, +100}),
-                rt::LineSegment({+100, +100}, {+100, -100}),
-                rt::LineSegment({+100, -100}, {-100, -100}),
+                rt::LineSegment({+100, +100}, {+200, -100}),
+                rt::LineSegment({+100, -100}, {-100, -200}),
                 rt::LineSegment({-100, -100}, {-100,    0}),
+                rt::LineSegment({  25,    0}, {25,    50}),
                 rt::LineSegment({ -50,  +50}, {-100,    0}),
                 rt::LineSegment({ +50,  -50}, { +75,    0}),
             })
         }
     };
     
-    rt::RayTracer raytracer{env};
+    this->raytracer = rt::RayTracer{env};
     
-    this->raytracer = raytracer;
 }
 
 //--------------------------------------------------------------
@@ -43,10 +45,18 @@ void ofApp::draw(){
     }
     
     auto startingRay = rt::Ray({sourcePoint.x, sourcePoint.y}, {pointingAt.x, pointingAt.y});
-        
+    
     if (environmentChanged) {
+        
+#ifdef DRAW_TRACE
         // Trace rays
         cachedPaths = raytracer.trace(startingRay, RT_MAX_DEPTH);
+#endif
+        
+#ifdef DRAW_CAST
+        cachedPaths = raytracer.cast(startingRay, M_PI / 8.f, 9, RT_MAX_DEPTH);
+#endif
+        
         environmentChanged = false;
     }
     
@@ -92,6 +102,8 @@ void ofApp::draw(){
         
         // Draw geometry's edges
         
+        std::vector<rt::LineSegment> edges;
+        
         for (auto edge : this->raytracer.environment.geometry.edges) {
             ofSetColor(ofFloatColor(1, 0, 0));
 
@@ -109,16 +121,28 @@ void ofApp::draw(){
 
         // Draw ray traces
 
-        ofSetColor(ofFloatColor(1, 1, 1));  // white
+        ofSetColor(ofFloatColor(1, 1, 1, 0.5));  // clear white
 
+#ifdef DRAW_CAST
+        for (auto cast : cachedPaths) {
+            auto paths = cast;
+#endif
+#ifdef DRAW_TRACE
+            auto paths = cachedPaths;
+#endif
         int lineWidth = RT_MAX_DEPTH;
-        for (auto trace : cachedPaths) {
-            ofSetLineWidth(lineWidth--);
+        for (auto trace : paths) {
+            ofSetLineWidth(lineWidth);
             ofDrawLine(DRAW_POINT_FOR_ARGS(trace.origin), DRAW_POINT_FOR_ARGS(trace.dest));
             // Round caps on ray ends
             ofDrawCircle(DRAWX(trace.origin.x), DRAWY(trace.origin.y), 4);
             ofDrawCircle(DRAWX(trace.dest.x), DRAWY(trace.dest.y), 4);
+            lineWidth--;
         }
+            
+#ifdef DRAW_CAST
+        }
+#endif
         
         // Draw source ray
         

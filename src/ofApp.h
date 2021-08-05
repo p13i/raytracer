@@ -2,7 +2,7 @@
 
 #include "ofMain.h"
 
-#include "raytracer.hpp"
+#include "rt_raytracer.hpp"
 
 // Drawing macros
 
@@ -13,6 +13,9 @@
 #define DRAWY(y) (-1 * (y))
 #define DRAW_POINT_FOR_ARGS(p) DRAWX(p.x), DRAWY(p.y)
 
+// #define DRAW_TRACE
+#define DRAW_CAST
+
 class ofApp : public ofBaseApp{
 
 	public:
@@ -20,8 +23,16 @@ class ofApp : public ofBaseApp{
         ofApp() { }
     
         rt::RayTracer raytracer;
+    
         ofVec2f sourcePoint, pointingAt;
+    
+#ifdef DRAW_TRACE
         std::vector<rt::Vector> cachedPaths;
+#endif
+
+#ifdef DRAW_CAST
+        std::vector<std::vector<rt::Vector>> cachedPaths;
+#endif
     
         bool environmentChanged = false;
     

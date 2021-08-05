@@ -1,11 +1,15 @@
 #include "ofMain.h"
 #include "ofApp.h"
 
-#include "raytracer.hpp"
+#define PRINTLN(x) std::cout << x << std::endl;
+
+
+#include "rt_raytracer.hpp"
+#include "rt_tests.hpp"
 
 //========================================================================
 int main( ){
-//    rt::main();
+    rt::test::run_tests();
     
     ofSetupOpenGL(DRAW_WINDOW_WIDTH, DRAW_WINDOW_HEIGHT, OF_WINDOW);			// <-------- setup the GL context
     

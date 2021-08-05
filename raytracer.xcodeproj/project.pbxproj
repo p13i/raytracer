@@ -7,7 +7,19 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1C6951A726B2FEEE00771D62 /* raytracer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C6951A526B2FEEE00771D62 /* raytracer.cpp */; };
+		1C47334426B64910000C1A15 /* rt_point.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C47334226B64910000C1A15 /* rt_point.cpp */; };
+		1C47334726B649E3000C1A15 /* rt_math.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C47334526B649E3000C1A15 /* rt_math.cpp */; };
+		1C6951A726B2FEEE00771D62 /* rt_raytracer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C6951A526B2FEEE00771D62 /* rt_raytracer.cpp */; };
+		1C82584D26B6630600FD11D0 /* rt_debug.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C82584B26B6630600FD11D0 /* rt_debug.cpp */; };
+		1C82585126B66A9B00FD11D0 /* rt_tests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C82584F26B66A9B00FD11D0 /* rt_tests.cpp */; };
+		1C82585426B66B8700FD11D0 /* rt_geo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C82585226B66B8700FD11D0 /* rt_geo.cpp */; };
+		1C82585A26B66DEB00FD11D0 /* rt_linesegment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C82585826B66DEB00FD11D0 /* rt_linesegment.cpp */; };
+		1C82585D26B66EAE00FD11D0 /* rt_linalg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C82585B26B66EAE00FD11D0 /* rt_linalg.cpp */; };
+		1C82586026B66F4F00FD11D0 /* rt_vector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C82585E26B66F4F00FD11D0 /* rt_vector.cpp */; };
+		1C82586326B670F000FD11D0 /* rt_ray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C82586126B670F000FD11D0 /* rt_ray.cpp */; };
+		1C82586626B6721F00FD11D0 /* rt_log.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C82586426B6721F00FD11D0 /* rt_log.cpp */; };
+		1C82586A26B6746A00FD11D0 /* rt_str.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C82586826B6746A00FD11D0 /* rt_str.cpp */; };
+		1CB5D12626B7800B00FA68C2 /* rt_trace.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CB5D12426B7800B00FA68C2 /* rt_trace.cpp */; };
 		E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4B69E1D0A3A1BDC003C02F2 /* main.cpp */; };
 		E4B69E210A3A1BDC003C02F2 /* ofApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4B69E1E0A3A1BDC003C02F2 /* ofApp.cpp */; };
 /* End PBXBuildFile section */
@@ -25,9 +37,33 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1C47334226B64910000C1A15 /* rt_point.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = rt_point.cpp; sourceTree = "<group>"; };
+		1C47334326B64910000C1A15 /* rt_point.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = rt_point.hpp; sourceTree = "<group>"; };
+		1C47334526B649E3000C1A15 /* rt_math.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = rt_math.cpp; sourceTree = "<group>"; };
+		1C47334626B649E3000C1A15 /* rt_math.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = rt_math.hpp; sourceTree = "<group>"; };
 		1C4E0DFC26B62BC000F6E75D /* environment.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = environment.txt; sourceTree = "<group>"; };
-		1C6951A526B2FEEE00771D62 /* raytracer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = raytracer.cpp; sourceTree = "<group>"; };
-		1C6951A626B2FEEE00771D62 /* raytracer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = raytracer.hpp; sourceTree = "<group>"; };
+		1C6951A526B2FEEE00771D62 /* rt_raytracer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = rt_raytracer.cpp; sourceTree = "<group>"; };
+		1C6951A626B2FEEE00771D62 /* rt_raytracer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = rt_raytracer.hpp; sourceTree = "<group>"; };
+		1C82584B26B6630600FD11D0 /* rt_debug.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = rt_debug.cpp; sourceTree = "<group>"; };
+		1C82584C26B6630600FD11D0 /* rt_debug.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = rt_debug.hpp; sourceTree = "<group>"; };
+		1C82584F26B66A9B00FD11D0 /* rt_tests.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = rt_tests.cpp; sourceTree = "<group>"; };
+		1C82585026B66A9B00FD11D0 /* rt_tests.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = rt_tests.hpp; sourceTree = "<group>"; };
+		1C82585226B66B8700FD11D0 /* rt_geo.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = rt_geo.cpp; sourceTree = "<group>"; };
+		1C82585326B66B8700FD11D0 /* rt_geo.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = rt_geo.hpp; sourceTree = "<group>"; };
+		1C82585826B66DEB00FD11D0 /* rt_linesegment.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = rt_linesegment.cpp; sourceTree = "<group>"; };
+		1C82585926B66DEB00FD11D0 /* rt_linesegment.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = rt_linesegment.hpp; sourceTree = "<group>"; };
+		1C82585B26B66EAE00FD11D0 /* rt_linalg.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = rt_linalg.cpp; sourceTree = "<group>"; };
+		1C82585C26B66EAE00FD11D0 /* rt_linalg.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = rt_linalg.hpp; sourceTree = "<group>"; };
+		1C82585E26B66F4F00FD11D0 /* rt_vector.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = rt_vector.cpp; sourceTree = "<group>"; };
+		1C82585F26B66F4F00FD11D0 /* rt_vector.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = rt_vector.hpp; sourceTree = "<group>"; };
+		1C82586126B670F000FD11D0 /* rt_ray.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = rt_ray.cpp; sourceTree = "<group>"; };
+		1C82586226B670F000FD11D0 /* rt_ray.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = rt_ray.hpp; sourceTree = "<group>"; };
+		1C82586426B6721F00FD11D0 /* rt_log.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = rt_log.cpp; sourceTree = "<group>"; };
+		1C82586526B6721F00FD11D0 /* rt_log.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = rt_log.hpp; sourceTree = "<group>"; };
+		1C82586826B6746A00FD11D0 /* rt_str.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = rt_str.cpp; sourceTree = "<group>"; };
+		1C82586926B6746A00FD11D0 /* rt_str.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = rt_str.hpp; sourceTree = "<group>"; };
+		1CB5D12426B7800B00FA68C2 /* rt_trace.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = rt_trace.cpp; sourceTree = "<group>"; };
+		1CB5D12526B7800B00FA68C2 /* rt_trace.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = rt_trace.hpp; sourceTree = "<group>"; };
 		E42962AC2163EDD300A6A9E2 /* ofCamera.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ofCamera.cpp; path = ../../../Stanford/of/libs/openFrameworks/3d/ofCamera.cpp; sourceTree = SOURCE_ROOT; };
 		E42962AD2163EDD300A6A9E2 /* ofMesh.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ofMesh.h; path = ../../../Stanford/of/libs/openFrameworks/3d/ofMesh.h; sourceTree = SOURCE_ROOT; };
 		E42962AE2163EDD300A6A9E2 /* ofNode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ofNode.h; path = ../../../Stanford/of/libs/openFrameworks/3d/ofNode.h; sourceTree = SOURCE_ROOT; };
@@ -233,8 +269,32 @@
 		1C6951A426B2FEE000771D62 /* rt */ = {
 			isa = PBXGroup;
 			children = (
-				1C6951A526B2FEEE00771D62 /* raytracer.cpp */,
-				1C6951A626B2FEEE00771D62 /* raytracer.hpp */,
+				1C6951A526B2FEEE00771D62 /* rt_raytracer.cpp */,
+				1C6951A626B2FEEE00771D62 /* rt_raytracer.hpp */,
+				1C47334226B64910000C1A15 /* rt_point.cpp */,
+				1C47334326B64910000C1A15 /* rt_point.hpp */,
+				1C47334526B649E3000C1A15 /* rt_math.cpp */,
+				1C47334626B649E3000C1A15 /* rt_math.hpp */,
+				1C82584B26B6630600FD11D0 /* rt_debug.cpp */,
+				1C82584C26B6630600FD11D0 /* rt_debug.hpp */,
+				1C82584F26B66A9B00FD11D0 /* rt_tests.cpp */,
+				1C82585026B66A9B00FD11D0 /* rt_tests.hpp */,
+				1C82585226B66B8700FD11D0 /* rt_geo.cpp */,
+				1C82585326B66B8700FD11D0 /* rt_geo.hpp */,
+				1C82585826B66DEB00FD11D0 /* rt_linesegment.cpp */,
+				1C82585926B66DEB00FD11D0 /* rt_linesegment.hpp */,
+				1C82585B26B66EAE00FD11D0 /* rt_linalg.cpp */,
+				1C82585C26B66EAE00FD11D0 /* rt_linalg.hpp */,
+				1C82585E26B66F4F00FD11D0 /* rt_vector.cpp */,
+				1C82585F26B66F4F00FD11D0 /* rt_vector.hpp */,
+				1C82586126B670F000FD11D0 /* rt_ray.cpp */,
+				1C82586226B670F000FD11D0 /* rt_ray.hpp */,
+				1C82586426B6721F00FD11D0 /* rt_log.cpp */,
+				1C82586526B6721F00FD11D0 /* rt_log.hpp */,
+				1C82586826B6746A00FD11D0 /* rt_str.cpp */,
+				1C82586926B6746A00FD11D0 /* rt_str.hpp */,
+				1CB5D12426B7800B00FA68C2 /* rt_trace.cpp */,
+				1CB5D12526B7800B00FA68C2 /* rt_trace.hpp */,
 			);
 			path = rt;
 			sourceTree = "<group>";
@@ -658,9 +718,21 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1C82586326B670F000FD11D0 /* rt_ray.cpp in Sources */,
+				1C47334726B649E3000C1A15 /* rt_math.cpp in Sources */,
+				1C82585A26B66DEB00FD11D0 /* rt_linesegment.cpp in Sources */,
+				1C47334426B64910000C1A15 /* rt_point.cpp in Sources */,
 				E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */,
+				1C82585426B66B8700FD11D0 /* rt_geo.cpp in Sources */,
+				1C82585D26B66EAE00FD11D0 /* rt_linalg.cpp in Sources */,
+				1C82586026B66F4F00FD11D0 /* rt_vector.cpp in Sources */,
 				E4B69E210A3A1BDC003C02F2 /* ofApp.cpp in Sources */,
-				1C6951A726B2FEEE00771D62 /* raytracer.cpp in Sources */,
+				1C82585126B66A9B00FD11D0 /* rt_tests.cpp in Sources */,
+				1CB5D12626B7800B00FA68C2 /* rt_trace.cpp in Sources */,
+				1C6951A726B2FEEE00771D62 /* rt_raytracer.cpp in Sources */,
+				1C82584D26B6630600FD11D0 /* rt_debug.cpp in Sources */,
+				1C82586626B6721F00FD11D0 /* rt_log.cpp in Sources */,
+				1C82586A26B6746A00FD11D0 /* rt_str.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

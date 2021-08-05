@@ -14,8 +14,8 @@
             filePath = "src/ofApp.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "115"
-            endingLineNumber = "115"
+            startingLineNumber = "134"
+            endingLineNumber = "134"
             landmarkName = "ofApp::draw()"
             landmarkType = "7">
             <Locations>
@@ -62,8 +62,8 @@
             filePath = "src/rt/raytracer.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "278"
-            endingLineNumber = "278"
+            startingLineNumber = "78"
+            endingLineNumber = "78"
             landmarkName = "rt::RayTracer::trace(start, depth)"
             landmarkType = "7">
             <Locations>
@@ -103,118 +103,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "453241B4-8EDA-41A8-B9C4-F9C25A897BF8"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "src/rt/raytracer.cpp"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "151"
-            endingLineNumber = "151"
-            landmarkName = "tests()"
-            landmarkType = "9">
-            <Locations>
-               <Location
-                  uuid = "453241B4-8EDA-41A8-B9C4-F9C25A897BF8 - 46d4164e0efb6e0f"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "tests()"
-                  moduleName = "raytracerDebug"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/p13i/Desktop/raytracer/raytracer/src/rt/raytracer.cpp"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "148"
-                  endingLineNumber = "148"
-                  offsetFromSymbolStart = "3312">
-               </Location>
-               <Location
-                  uuid = "453241B4-8EDA-41A8-B9C4-F9C25A897BF8 - 46d4164e0efb6e0f"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "tests()"
-                  moduleName = "raytracerDebug"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/p13i/Desktop/raytracer/raytracer/src/rt/raytracer.cpp"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "148"
-                  endingLineNumber = "148"
-                  offsetFromSymbolStart = "3425">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "F2991850-D2D4-447C-886F-31F27C741ED3"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "src/rt/raytracer.cpp"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "356"
-            endingLineNumber = "356"
-            landmarkName = "rt::geo::reflect(forwardTrace, intersectedEdge)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "46D361DC-04C6-4A13-AB8F-A57A7CF0373B"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "src/rt/raytracer.cpp"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "371"
-            endingLineNumber = "371"
-            landmarkName = "rt::geo::reflect(forwardTrace, intersectedEdge)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "64811581-7263-4479-A39F-229220C254DA"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "src/rt/raytracer.cpp"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "351"
-            endingLineNumber = "351"
-            landmarkName = "unknown"
-            landmarkType = "0">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "6B00B872-EC94-4BC5-A97E-8434A3E878F9"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "src/rt/raytracer.cpp"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "370"
-            endingLineNumber = "370"
-            landmarkName = "rt::geo::reflect(forwardTrace, intersectedEdge)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "B9DF8822-4E7F-4D90-9889-A2E7F05B0C1B"
             shouldBeEnabled = "No"
             ignoreCount = "0"
@@ -222,8 +110,8 @@
             filePath = "src/rt/raytracer.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "269"
-            endingLineNumber = "269"
+            startingLineNumber = "69"
+            endingLineNumber = "69"
             landmarkName = "rt::RayTracer::trace(start, depth)"
             landmarkType = "7">
          </BreakpointContent>
@@ -238,8 +126,8 @@
             filePath = "src/rt/raytracer.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "279"
-            endingLineNumber = "279"
+            startingLineNumber = "79"
+            endingLineNumber = "79"
             landmarkName = "rt::RayTracer::trace(start, depth)"
             landmarkType = "7">
          </BreakpointContent>
@@ -255,8 +143,8 @@
             filePath = "src/rt/raytracer.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "226"
-            endingLineNumber = "226"
+            startingLineNumber = "26"
+            endingLineNumber = "26"
             landmarkName = "rt::RayTracer::trace(start, depth)"
             landmarkType = "7">
          </BreakpointContent>
@@ -271,8 +159,8 @@
             filePath = "src/rt/raytracer.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "267"
-            endingLineNumber = "267"
+            startingLineNumber = "67"
+            endingLineNumber = "67"
             landmarkName = "rt::RayTracer::trace(start, depth)"
             landmarkType = "7">
          </BreakpointContent>
@@ -287,8 +175,8 @@
             filePath = "src/rt/raytracer.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "258"
-            endingLineNumber = "258"
+            startingLineNumber = "58"
+            endingLineNumber = "58"
             landmarkName = "rt::RayTracer::trace(start, depth)"
             landmarkType = "7">
          </BreakpointContent>
@@ -303,8 +191,8 @@
             filePath = "src/ofApp.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "53"
-            endingLineNumber = "53"
+            startingLineNumber = "63"
+            endingLineNumber = "63"
             landmarkName = "ofApp::draw()"
             landmarkType = "7">
          </BreakpointContent>
@@ -319,8 +207,8 @@
             filePath = "src/rt/raytracer.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "263"
-            endingLineNumber = "263"
+            startingLineNumber = "63"
+            endingLineNumber = "63"
             landmarkName = "rt::RayTracer::trace(start, depth)"
             landmarkType = "7">
          </BreakpointContent>
@@ -335,8 +223,8 @@
             filePath = "src/rt/raytracer.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "262"
-            endingLineNumber = "262"
+            startingLineNumber = "62"
+            endingLineNumber = "62"
             landmarkName = "rt::RayTracer::trace(start, depth)"
             landmarkType = "7">
          </BreakpointContent>
@@ -351,8 +239,8 @@
             filePath = "src/rt/raytracer.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "259"
-            endingLineNumber = "259"
+            startingLineNumber = "59"
+            endingLineNumber = "59"
             landmarkName = "rt::RayTracer::trace(start, depth)"
             landmarkType = "7">
          </BreakpointContent>
@@ -367,8 +255,8 @@
             filePath = "src/rt/raytracer.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "239"
-            endingLineNumber = "239"
+            startingLineNumber = "39"
+            endingLineNumber = "39"
             landmarkName = "rt::RayTracer::trace(start, depth)"
             landmarkType = "7">
          </BreakpointContent>
@@ -384,8 +272,8 @@
             filePath = "src/rt/raytracer.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "250"
-            endingLineNumber = "250"
+            startingLineNumber = "50"
+            endingLineNumber = "50"
             landmarkName = "rt::RayTracer::trace(start, depth)"
             landmarkType = "7">
          </BreakpointContent>
@@ -400,8 +288,8 @@
             filePath = "src/rt/raytracer.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "283"
-            endingLineNumber = "283"
+            startingLineNumber = "83"
+            endingLineNumber = "83"
             landmarkName = "rt::RayTracer::trace(start, depth)"
             landmarkType = "7">
          </BreakpointContent>
@@ -416,8 +304,8 @@
             filePath = "src/rt/raytracer.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "236"
-            endingLineNumber = "236"
+            startingLineNumber = "36"
+            endingLineNumber = "36"
             landmarkName = "rt::RayTracer::trace(start, depth)"
             landmarkType = "7">
          </BreakpointContent>
@@ -432,25 +320,9 @@
             filePath = "src/rt/raytracer.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "227"
-            endingLineNumber = "227"
+            startingLineNumber = "27"
+            endingLineNumber = "27"
             landmarkName = "rt::RayTracer::trace(start, depth)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "0C247BA4-B116-4E42-A2A1-A9FBA0E2DA45"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "src/rt/raytracer.cpp"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "358"
-            endingLineNumber = "358"
-            landmarkName = "rt::geo::reflect(forwardTrace, intersectedEdge)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -464,8 +336,8 @@
             filePath = "src/rt/raytracer.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "252"
-            endingLineNumber = "252"
+            startingLineNumber = "52"
+            endingLineNumber = "52"
             landmarkName = "rt::RayTracer::trace(start, depth)"
             landmarkType = "7">
          </BreakpointContent>
@@ -480,8 +352,8 @@
             filePath = "src/rt/raytracer.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "276"
-            endingLineNumber = "276"
+            startingLineNumber = "76"
+            endingLineNumber = "76"
             landmarkName = "rt::RayTracer::trace(start, depth)"
             landmarkType = "7">
          </BreakpointContent>
@@ -496,8 +368,8 @@
             filePath = "src/rt/raytracer.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "251"
-            endingLineNumber = "251"
+            startingLineNumber = "51"
+            endingLineNumber = "51"
             landmarkName = "rt::RayTracer::trace(start, depth)"
             landmarkType = "7">
          </BreakpointContent>
@@ -512,9 +384,121 @@
             filePath = "src/ofApp.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "116"
-            endingLineNumber = "116"
+            startingLineNumber = "135"
+            endingLineNumber = "135"
             landmarkName = "ofApp::draw()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "F1229FD5-6B89-4FBA-A8FC-4D1271D0013D"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "src/ofApp.cpp"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "57"
+            endingLineNumber = "57"
+            landmarkName = "ofApp::draw()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "CF09520A-903C-4205-A5BB-13E2E2EEBFEE"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "src/ofApp.cpp"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "53"
+            endingLineNumber = "53"
+            landmarkName = "ofApp::draw()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "6CAE55CC-1E54-44DC-8D2C-4D552E99DAE7"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "src/ofApp.cpp"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "107"
+            endingLineNumber = "107"
+            landmarkName = "ofApp::draw()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "6CAE55CC-1E54-44DC-8D2C-4D552E99DAE7 - cb43f50f7863831a"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ofApp::draw()"
+                  moduleName = "raytracer"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/p13i/Desktop/raytracer/raytracer/src/ofApp.cpp"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "107"
+                  endingLineNumber = "107"
+                  offsetFromSymbolStart = "1533">
+               </Location>
+               <Location
+                  uuid = "6CAE55CC-1E54-44DC-8D2C-4D552E99DAE7 - cb43f50f7863831a"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ofApp::draw()"
+                  moduleName = "raytracer"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/p13i/Desktop/raytracer/raytracer/src/ofApp.cpp"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "107"
+                  endingLineNumber = "107"
+                  offsetFromSymbolStart = "1568">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "69185286-8838-4A2B-8194-49E4D4CFB096"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "src/rt/rt_tests.cpp"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "65"
+            endingLineNumber = "65"
+            landmarkName = "rt::test::run_tests()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "07890B30-7DF4-4A9B-8D13-CB2A81656471"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "src/rt/rt_raytracer.cpp"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "82"
+            endingLineNumber = "82"
+            landmarkName = "rt::RayTracer::cast(start, spreadRadians, spreadCount, depth)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
