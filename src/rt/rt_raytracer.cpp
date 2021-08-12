@@ -21,40 +21,9 @@ std::vector<rt::Vector> rt::RayTracer::trace(rt::Ray start, unsigned int depth) 
     
     std::vector<rt::Vector> tracedPaths;
     
-    float time = 0.;
-    
-    bool intersection = false;
     Point intersectionPoint;
-    rt::LineSegment intersectedEdge;
-    while (!intersection) {
-        
-        Point marchedRayPoint = start(time);
-    
-        // Find first intersection via ray marching
-        for (rt::LineSegment edge : this->environment.geometry.edges) {
-            
-            if (rt::geo::intersection(edge, {start.origin, marchedRayPoint}, intersectionPoint)) {
-                
-                float rayOriginToIxnPointDist = rt::geo::dist(start.origin, intersectionPoint);
-                float marchedPtToIxnPointDistance = rt::geo::dist(marchedRayPoint, intersectionPoint);
-                
-                // Make sure the ray was facing to the intersection point
-                if (rayOriginToIxnPointDist > marchedPtToIxnPointDistance) {
-                    intersection = true;
-                    intersectedEdge = edge;
-                    break;
-                }
-            }
-        }
-        
-        if (!intersection) {
-            time += RT_RAY_MARCH_TIME_STEP;
-        }
-        
-        if (time > RT_RAY_MARCH_TIME_LIMIT) {
-            break;
-        }
-    }
+    LineSegment intersectedEdge;
+    bool intersection = this->environment.geometry.intersection(start, intersectionPoint, intersectedEdge);
     
     if (intersection) {
         rt::Vector forwardTrace = rt::Vector(start.origin, intersectionPoint);
@@ -79,12 +48,19 @@ std::vector<rt::Vector> rt::RayTracer::trace(rt::Ray start, unsigned int depth) 
 std::vector<std::vector<rt::Vector>> rt::RayTracer::cast(rt::Ray start, float spreadRadians, unsigned int spreadCount, unsigned int depth) {
     std::vector<std::vector<rt::Vector>> casts;
     
-    float startRadius = start.radians();
+    float startRadians = start.radians();
     
     for (int i = 0; i < spreadCount; i++) {
-        float radianOffset = spreadRadians * (float) (i / (float) spreadCount);
+        float radianOffset = i * ((spreadRadians) / ((float) (spreadCount - 1)));
         
-        rt::Ray newStart = Ray(start.origin, startRadius + radianOffset);
+        // Offset further if the number of rays is even
+        if (spreadCount % 2 == 0) {
+            radianOffset -= (spreadRadians / 2.f);
+        }
+        
+        float rayOffset = startRadians + radianOffset;
+        
+        rt::Ray newStart = Ray(start.origin, rayOffset);
         
         std::vector<rt::Vector> traces = this->trace(newStart, depth);
         

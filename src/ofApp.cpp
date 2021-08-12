@@ -4,30 +4,29 @@
 #include <stdio.h>
 #include <set>
 
+#include "rt_parser.hpp"
+#include "rt_hyperparams.hpp"
+#include "rt_str.hpp"
+
 //--------------------------------------------------------------
 void ofApp::setup(){
     ofBackground(0, 0, 0);  // black
     
     ofSetFrameRate(24);
+
+#ifdef DRAW_TRACE
+    auto tracerType = "Raytracer";
+#endif
+#ifdef DRAW_CAST
+    auto tracerType = "Raycaster";
+#endif
     
+    ofSetWindowTitle(rt::str::format("%s (depth=%d, spread=%.2f, n=%d)",
+                                     tracerType, RT_MAX_DEPTH, RT_SPREAD_RADIANS, RT_NUM_RAYS));
     
-    rt::Environment env{
-        /* geometry: */ {
-            /* edges: */ std::vector<rt::LineSegment>({
-                rt::LineSegment({-200, +100}, {-100, +200}),
-                rt::LineSegment({   0, +100}, {+100, +100}),
-                rt::LineSegment({+100, +100}, {+200, -100}),
-                rt::LineSegment({+100, -100}, {-100, -200}),
-                rt::LineSegment({-100, -100}, {-100,    0}),
-                rt::LineSegment({  25,    0}, {25,    50}),
-                rt::LineSegment({ -50,  +50}, {-100,    0}),
-                rt::LineSegment({ +50,  -50}, { +75,    0}),
-            })
-        }
-    };
-    
+    rt::Geometry geo = rt::parser::readGeometry(RT_ENVIRONMENT_FILE);
+    rt::Environment env{geo};
     this->raytracer = rt::RayTracer{env};
-    
 }
 
 //--------------------------------------------------------------
@@ -54,7 +53,7 @@ void ofApp::draw(){
 #endif
         
 #ifdef DRAW_CAST
-        cachedPaths = raytracer.cast(startingRay, M_PI / 8.f, 9, RT_MAX_DEPTH);
+        cachedPaths = raytracer.cast(startingRay, RT_SPREAD_RADIANS, RT_NUM_RAYS, RT_MAX_DEPTH);
 #endif
         
         environmentChanged = false;
@@ -63,6 +62,7 @@ void ofApp::draw(){
     ofPushMatrix();
     {
         ofTranslate((DRAW_WINDOW_WIDTH / 2), (DRAW_WINDOW_HEIGHT / 2));
+        ofRotateXDeg(180);
         
         // *****
         // DRAW ENVIRONMENT
@@ -77,8 +77,8 @@ void ofApp::draw(){
              rowY > (-1 * DRAW_WINDOW_HEIGHT / 2);
              rowY -= DRAW_GRID_SPACING_PX) {
             ofSetLineWidth(1);
-            ofDrawLine(DRAWX(-1 * DRAW_WINDOW_WIDTH / 2), DRAWY(rowY),
-                       DRAWX(+1 * DRAW_WINDOW_WIDTH / 2), DRAWY(rowY));
+            ofDrawLine((-1 * DRAW_WINDOW_WIDTH / 2), (rowY),
+                       (+1 * DRAW_WINDOW_WIDTH / 2), (rowY));
         }
         
         // Draw columns
@@ -86,19 +86,19 @@ void ofApp::draw(){
              colX > (-1 * DRAW_WINDOW_WIDTH / 2);
              colX -= DRAW_GRID_SPACING_PX) {
             ofSetLineWidth(1);
-            ofDrawLine(DRAWX(colX), DRAWY(-1 * DRAW_WINDOW_HEIGHT / 2),
-                       DRAWX(colX), DRAWY(+1 * DRAW_WINDOW_HEIGHT / 2));
+            ofDrawLine((colX), (-1 * DRAW_WINDOW_HEIGHT / 2),
+                       (colX), (+1 * DRAW_WINDOW_HEIGHT / 2));
         }
         
         // Draw x-axis
         ofSetLineWidth(2);
         ofSetColor(ofFloatColor(1, 0, 0));
-        ofDrawLine(DRAWX(0), DRAWY(0), DRAWX(DRAW_GRID_SPACING_PX / 8), DRAWY(0));
+        ofDrawLine((0), (0), (DRAW_GRID_SPACING_PX / 8), (0));
         
         // Draw y-axis
         ofSetLineWidth(2);
         ofSetColor(ofFloatColor(0, 1, 0));
-        ofDrawLine(DRAWX(0), DRAWY(0), DRAWX(0), DRAWY(DRAW_GRID_SPACING_PX / 8));
+        ofDrawLine((0), (0), (0), (DRAW_GRID_SPACING_PX / 8));
         
         // Draw geometry's edges
         
@@ -111,12 +111,12 @@ void ofApp::draw(){
             ofSetLineWidth(lineWidth);
 
             // The edge from a to b
-            ofDrawLine(DRAWX(edge.a.x), DRAWY(edge.a.y),
-                       DRAWX(edge.b.x), DRAWY(edge.b.y));
+            ofDrawLine((edge.a.x), (edge.a.y),
+                       (edge.b.x), (edge.b.y));
 
             // Round caps on wall ends
-            ofDrawCircle(DRAWX(edge.a.x), DRAWY(edge.a.y), lineWidth / 2);
-            ofDrawCircle(DRAWX(edge.b.x), DRAWY(edge.b.y), lineWidth / 2);
+            ofDrawCircle((edge.a.x), (edge.a.y), lineWidth / 2);
+            ofDrawCircle((edge.b.x), (edge.b.y), lineWidth / 2);
         }
 
         // Draw ray traces
@@ -133,10 +133,10 @@ void ofApp::draw(){
         int lineWidth = RT_MAX_DEPTH;
         for (auto trace : paths) {
             ofSetLineWidth(lineWidth);
-            ofDrawLine(DRAW_POINT_FOR_ARGS(trace.origin), DRAW_POINT_FOR_ARGS(trace.dest));
+            ofDrawLine(trace.origin.x, trace.origin.y, trace.dest.x, trace.dest.y);
             // Round caps on ray ends
-            ofDrawCircle(DRAWX(trace.origin.x), DRAWY(trace.origin.y), 4);
-            ofDrawCircle(DRAWX(trace.dest.x), DRAWY(trace.dest.y), 4);
+            ofDrawCircle((trace.origin.x), (trace.origin.y), 4);
+            ofDrawCircle((trace.dest.x), (trace.dest.y), 4);
             lineWidth--;
         }
             
@@ -148,13 +148,15 @@ void ofApp::draw(){
         
         ofSetColor(ofColor(128, 0, 128));  // purple
         
-        ofDrawCircle(DRAWX(startingRay.origin.x), DRAWY(startingRay.origin.y), 4);
+        ofDrawCircle((startingRay.origin.x), (startingRay.origin.y), 4);
         
         ofSetLineWidth(2);
-        ofDrawLine(DRAWX(startingRay.origin.x), DRAWY(startingRay.origin.y),
-                   DRAWX(startingRay(20).x), DRAWY(startingRay(20).y));
+        ofDrawLine((startingRay.origin.x), (startingRay.origin.y),
+                   (startingRay(20).x), (startingRay(20).y));
         
-        ofDrawCircle(DRAWX(startingRay(20).x), DRAWY(startingRay(20).y), 2);
+        ofDrawCircle((startingRay(20).x), (startingRay(20).y), 2);
+        
+        ofDrawCircle(pointingAt.x, pointingAt.y, 2);
         
     }
     ofPopMatrix();
@@ -171,6 +173,8 @@ void ofApp::keyPressed(int key){
         return;
     }
     
+    ofVec2f oldSourcePoint = sourcePoint;
+    
     const int step = 10;
     if (key == OF_KEY_LEFT) {
         sourcePoint.x -= step;
@@ -181,6 +185,10 @@ void ofApp::keyPressed(int key){
     } else if (key == OF_KEY_DOWN) {
         sourcePoint.y -= step;
     }
+    
+    ofVec2f newSourcePoint = sourcePoint;
+    
+    pointingAt += (newSourcePoint - oldSourcePoint);
     
     environmentChanged = true;
 }

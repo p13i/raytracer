@@ -12,6 +12,7 @@
 #include "rt_vector.hpp"
 
 #include <cmath>
+#include <iostream>
 
 namespace rt {
 
@@ -21,7 +22,7 @@ struct Ray {
     
     Ray(): Ray({}, {}) { }
     
-    Ray(rt::Point origin, float radians): Ray(origin, Point{cos(radians), sin(radians)}) { }
+    Ray(rt::Point origin, float radians): Ray(origin, Vector{{cos(radians), sin(radians)}}) { }
     
     Ray(rt::Point origin, rt::Point towards): Ray(origin, Vector(towards - origin).unit()) { }
     
@@ -53,4 +54,7 @@ struct Ray {
 };
 
 }
+
+std::ostream& operator << (std::ostream& os, const rt::Ray& ray);
+
 #endif /* rt_ray_hpp */

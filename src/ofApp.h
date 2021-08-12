@@ -4,17 +4,13 @@
 
 #include "rt_raytracer.hpp"
 
+#include <string>
+
 // Drawing macros
 
-#define DRAW_WINDOW_WIDTH 400
+#define DRAW_WINDOW_WIDTH 800
 #define DRAW_WINDOW_HEIGHT DRAW_WINDOW_WIDTH
-#define DRAW_GRID_SPACING_PX 100
-#define DRAWX(x) (x)
-#define DRAWY(y) (-1 * (y))
-#define DRAW_POINT_FOR_ARGS(p) DRAWX(p.x), DRAWY(p.y)
-
-// #define DRAW_TRACE
-#define DRAW_CAST
+#define DRAW_GRID_SPACING_PX 50
 
 class ofApp : public ofBaseApp{
 

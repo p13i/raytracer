@@ -6,3 +6,7 @@
 //
 
 #include "rt_ray.hpp"
+
+std::ostream& operator << (std::ostream& os, const rt::Ray& ray) {
+    return os << "Ray(origin=" << ray.origin << ", direction=" << ray.direction << ")";
+};
