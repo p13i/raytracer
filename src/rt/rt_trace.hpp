@@ -19,7 +19,7 @@ struct Trace {
     bool isTerminal;
     struct rt::Trace *next;
     
-    Trace(Vector vec, float luminance, bool isTerminal, Trace *next):
+    Trace(Vector vec, float luminance, bool isTerminal = false, Trace *next = nullptr):
         vec(vec), luminance(luminance), isTerminal(isTerminal), next(next) { }
 };
 

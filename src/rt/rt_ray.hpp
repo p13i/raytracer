@@ -44,7 +44,7 @@ struct Ray {
         
         // Source: https://math.stackexchange.com/a/1183407/414919
         if (dir.x < 0) {
-            theta += M_PI;
+            theta += RT_PI;
         }
         
         return theta;

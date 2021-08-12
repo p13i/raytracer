@@ -27,7 +27,7 @@ class ofApp : public ofBaseApp{
 #endif
 
 #ifdef DRAW_CAST
-        std::vector<std::vector<rt::Vector>> cachedPaths;
+        std::vector<rt::Trace*> cachedPaths;
 #endif
     
         bool environmentChanged = false;

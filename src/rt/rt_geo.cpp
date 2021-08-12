@@ -66,7 +66,7 @@ rt::Ray rt::geo::reflect(rt::Vector forwardTrace, LineSegment intersectedEdge) {
     
     rt::Point intersectionPoint;
     if (!rt::geo::intersection(forwardTrace.lineSegment(), {intersectedEdge.a, intersectedEdge.b}, intersectionPoint)) {
-        return;
+        return {};
     }
 
     auto d = forwardTrace.unit();

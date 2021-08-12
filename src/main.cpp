@@ -6,7 +6,7 @@
 
 //========================================================================
 int main(int argc, char *argv[]){
-    rt::test::run_tests();
+    // rt::test::run_tests();
     
     ofSetupOpenGL(DRAW_WINDOW_WIDTH, DRAW_WINDOW_HEIGHT, OF_WINDOW);			// <-------- setup the GL context
     

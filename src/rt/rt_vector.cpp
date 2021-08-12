@@ -12,7 +12,6 @@ rt::Vector operator * (int scalar, rt::Vector vec) {
     return rt::Vector(vec.origin, newDest);
 }
 
-
 rt::Vector operator * (float scalar, rt::Vector vec) {
     return vec * scalar;
 }

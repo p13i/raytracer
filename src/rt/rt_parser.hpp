@@ -9,6 +9,7 @@
 #define rt_parser_hpp
 
 #include "rt_raytracer.hpp"
+#include "rt_geometry.hpp"
 
 namespace rt { namespace parser {
 

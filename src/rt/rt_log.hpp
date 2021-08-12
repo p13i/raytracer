@@ -9,7 +9,6 @@
 #define rt_log_hpp
 
 #include <stdio.h>
-#include <sys/time.h>
 #include <time.h>
 #include <math.h>
 #include <vector>

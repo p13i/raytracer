@@ -43,7 +43,7 @@ void ofApp::draw(){
         environmentChanged = true;
     }
     
-    auto startingRay = rt::Ray({sourcePoint.x, sourcePoint.y}, {pointingAt.x, pointingAt.y});
+    rt::Ray startingRay({sourcePoint.x, sourcePoint.y}, {pointingAt.x, pointingAt.y});
     
     if (environmentChanged) {
         
@@ -124,22 +124,24 @@ void ofApp::draw(){
         ofSetColor(ofFloatColor(1, 1, 1, 0.5));  // clear white
 
 #ifdef DRAW_CAST
-        for (auto cast : cachedPaths) {
-            auto paths = cast;
+        for (rt::Trace *trace : cachedPaths) {
 #endif
+
 #ifdef DRAW_TRACE
             auto paths = cachedPaths;
 #endif
-        int lineWidth = RT_MAX_DEPTH;
-        for (auto trace : paths) {
-            ofSetLineWidth(lineWidth);
-            ofDrawLine(trace.origin.x, trace.origin.y, trace.dest.x, trace.dest.y);
-            // Round caps on ray ends
-            ofDrawCircle((trace.origin.x), (trace.origin.y), 4);
-            ofDrawCircle((trace.dest.x), (trace.dest.y), 4);
-            lineWidth--;
-        }
-            
+            int lineWidth = 8;
+            while (trace != nullptr && lineWidth > 0.) {
+
+                ofSetLineWidth(lineWidth);
+                ofDrawLine(trace->vec.origin.x, trace->vec.origin.y, trace->vec.dest.x, trace->vec.dest.y);
+                // Round caps on ray ends
+                ofDrawCircle((trace->vec.origin.x), (trace->vec.origin.y), 4);
+                ofDrawCircle((trace->vec.dest.x), (trace->vec.dest.y), 4);
+                lineWidth *= lineWidth > RT_EXTINGUISH_FLOAT ? 0.75 : 0.;
+                trace = trace->next;
+            }
+
 #ifdef DRAW_CAST
         }
 #endif
