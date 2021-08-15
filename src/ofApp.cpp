@@ -132,13 +132,12 @@ void ofApp::draw(){
 #endif
             int lineWidth = 8;
             while (trace != nullptr && lineWidth > 0.) {
-
                 ofSetLineWidth(lineWidth);
                 ofDrawLine(trace->vec.origin.x, trace->vec.origin.y, trace->vec.dest.x, trace->vec.dest.y);
                 // Round caps on ray ends
                 ofDrawCircle((trace->vec.origin.x), (trace->vec.origin.y), 4);
                 ofDrawCircle((trace->vec.dest.x), (trace->vec.dest.y), 4);
-                lineWidth *= lineWidth > RT_EXTINGUISH_FLOAT ? 0.75 : 0.;
+                lineWidth *= lineWidth > 0.000001 ? 0.9 : 0.;
                 trace = trace->next;
             }
 
@@ -177,7 +176,7 @@ void ofApp::keyPressed(int key){
     
     ofVec2f oldSourcePoint = sourcePoint;
     
-    const int step = 10;
+    const int step = 2;
     if (key == OF_KEY_LEFT) {
         sourcePoint.x -= step;
     } else if (key == OF_KEY_RIGHT) {

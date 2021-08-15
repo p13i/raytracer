@@ -58,18 +58,11 @@ std::vector<rt::Trace*> rt::RayTracer::cast(rt::Ray start, float spreadRadians, 
     
     float startRadians = start.radians();
     
+    float radianOffset = -(spreadRadians / 2.f);
     for (int i = 0; i < spreadCount; i++) {
-        float radianOffset = i * spreadRadians;
+        
+        radianOffset += (spreadRadians / (float) spreadCount);
 
-        if (spreadCount % 2 == 0) {
-            radianOffset /= (spreadCount);
-        }
-        
-        // Offset further if the number of rays is even
-        if (spreadCount % 2 == 1) {
-            radianOffset /= (spreadRadians / 2.f);
-        }
-        
         float rayOffset = startRadians + radianOffset;
         
         rt::Ray newStart(start.origin, rayOffset);
