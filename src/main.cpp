@@ -6,7 +6,11 @@
 
 //========================================================================
 int main(int argc, char *argv[]){
-    // rt::test::run_tests();
+    
+    if (argc >= 2 && std::string(argv[1]) == "run-tests") {
+        rt::test::run_tests();
+        return;
+    }
     
     ofSetupOpenGL(DRAW_WINDOW_WIDTH, DRAW_WINDOW_HEIGHT, OF_WINDOW);			// <-------- setup the GL context
     

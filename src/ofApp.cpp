@@ -1,32 +1,36 @@
 #include "ofApp.h"
 
-#include <algorithm>
-#include <stdio.h>
-#include <set>
-
 #include "rt_parser.hpp"
 #include "rt_hyperparams.hpp"
 #include "rt_str.hpp"
 
+#include <algorithm>
+#include <stdio.h>
+#include <set>
+#include <ctime>
+#include <tuple>
+
+using namespace std;
+using namespace rt;
+
 //--------------------------------------------------------------
 void ofApp::setup(){
+    mAppSetupTime = time(nullptr);
+    mEnvironmentChangedTime = mAppSetupTime;
+    
     ofBackground(0, 0, 0);  // black
     
-    ofSetFrameRate(24);
+    ofSetFrameRate(APP_FRAME_RATE);
 
-#ifdef DRAW_TRACE
-    auto tracerType = "Raytracer";
-#endif
-#ifdef DRAW_CAST
-    auto tracerType = "Raycaster";
-#endif
+    string windowTitle = rt::str::format(
+     "Raycaster (depth=%d, spread=%.2f, n=%d)",
+     RT_MAX_DEPTH, RT_SPREAD_RADIANS, RT_NUM_RAYS);
     
-    ofSetWindowTitle(rt::str::format("%s (depth=%d, spread=%.2f, n=%d)",
-                                     tracerType, RT_MAX_DEPTH, RT_SPREAD_RADIANS, RT_NUM_RAYS));
+    ofSetWindowTitle(windowTitle);
     
-    rt::Geometry geo = rt::parser::readGeometry(RT_ENVIRONMENT_FILE);
-    rt::Environment env{geo};
-    this->raytracer = rt::RayTracer{env};
+    Geometry geo = rt::parser::readGeometry(RT_ENVIRONMENT_FILE);
+    Environment env{geo};
+    mRayTracer = RayTracer{env};
 }
 
 //--------------------------------------------------------------
@@ -39,28 +43,23 @@ void ofApp::draw(){
 
     if (ofGetMousePressed()) {
         ofVec2f mousePosition = ofVec2f(ofGetMouseX(), ofGetMouseY());
-        pointingAt = {mousePosition.x - DRAW_WINDOW_WIDTH / 2, -1 * (mousePosition.y - DRAW_WINDOW_HEIGHT / 2.f)};
-        environmentChanged = true;
+        mPlayerPointingAt =
+            {mousePosition.x - DRAW_WINDOW_WIDTH / 2,
+             -1 * (mousePosition.y - DRAW_WINDOW_HEIGHT / 2.f)};
+        mEnvironmentChanged = true;
+        mEnvironmentChangedTime = time(nullptr);
     }
     
-    rt::Ray startingRay({sourcePoint.x, sourcePoint.y}, {pointingAt.x, pointingAt.y});
+    Ray startingRay({mPlayerLocation.x, mPlayerLocation.y}, {mPlayerPointingAt.x, mPlayerPointingAt.y});
     
-    if (environmentChanged) {
-        
-#ifdef DRAW_TRACE
-        // Trace rays
-        cachedPaths = raytracer.trace(startingRay, RT_MAX_DEPTH);
-#endif
-        
-#ifdef DRAW_CAST
-        cachedPaths = raytracer.cast(startingRay, RT_SPREAD_RADIANS, RT_NUM_RAYS, RT_MAX_DEPTH);
-#endif
-        
-        environmentChanged = false;
+    if (mEnvironmentChanged) {
+        mCachedPaths = mRayTracer.cast(startingRay,
+           RT_SPREAD_RADIANS, RT_NUM_RAYS, RT_MAX_DEPTH);
     }
     
     ofPushMatrix();
     {
+        // Center on (0, 0) with positive x-axis to the right and positive
         ofTranslate((DRAW_WINDOW_WIDTH / 2), (DRAW_WINDOW_HEIGHT / 2));
         ofRotateXDeg(180);
         
@@ -79,6 +78,7 @@ void ofApp::draw(){
             ofSetLineWidth(1);
             ofDrawLine((-1 * DRAW_WINDOW_WIDTH / 2), (rowY),
                        (+1 * DRAW_WINDOW_WIDTH / 2), (rowY));
+            
         }
         
         // Draw columns
@@ -102,48 +102,39 @@ void ofApp::draw(){
         
         // Draw geometry's edges
         
-        std::vector<rt::LineSegment> edges;
-        
-        for (auto edge : this->raytracer.environment.geometry.edges) {
+        for (LineSegment edge : mRayTracer.environment.geometry.edges) {
             ofSetColor(ofFloatColor(1, 0, 0));
 
-            float lineWidth = 4;
-            ofSetLineWidth(lineWidth);
+            ofSetLineWidth(4);
 
             // The edge from a to b
-            ofDrawLine((edge.a.x), (edge.a.y),
-                       (edge.b.x), (edge.b.y));
+            ofDrawLine((edge.a.x), (edge.a.y), (edge.b.x), (edge.b.y));
 
             // Round caps on wall ends
-            ofDrawCircle((edge.a.x), (edge.a.y), lineWidth / 2);
-            ofDrawCircle((edge.b.x), (edge.b.y), lineWidth / 2);
+            ofDrawCircle((edge.a.x), (edge.a.y), 2);
+            ofDrawCircle((edge.b.x), (edge.b.y), 2);
         }
 
         // Draw ray traces
 
         ofSetColor(ofFloatColor(1, 1, 1, 0.5));  // clear white
 
-#ifdef DRAW_CAST
-        for (rt::Trace *trace : cachedPaths) {
-#endif
-
-#ifdef DRAW_TRACE
-            auto paths = cachedPaths;
-#endif
-            int lineWidth = 8;
+        for (Trace *trace : mCachedPaths) {
+            // Draw out rays with diminishiong power (i.e. lineWidth)
+            float lineWidth = 8;
             while (trace != nullptr && lineWidth > 0.) {
                 ofSetLineWidth(lineWidth);
                 ofDrawLine(trace->vec.origin.x, trace->vec.origin.y, trace->vec.dest.x, trace->vec.dest.y);
                 // Round caps on ray ends
                 ofDrawCircle((trace->vec.origin.x), (trace->vec.origin.y), 4);
                 ofDrawCircle((trace->vec.dest.x), (trace->vec.dest.y), 4);
+                
+                // Move forward
                 lineWidth *= lineWidth > 0.000001 ? 0.9 : 0.;
                 trace = trace->next;
             }
 
-#ifdef DRAW_CAST
         }
-#endif
         
         // Draw source ray
         
@@ -157,12 +148,35 @@ void ofApp::draw(){
         
         ofDrawCircle((startingRay(20).x), (startingRay(20).y), 2);
         
-        ofDrawCircle(pointingAt.x, pointingAt.y, 2);
+        ofDrawCircle(mPlayerPointingAt.x, mPlayerPointingAt.y, 2);
+        
+        float fps = mFpsCounter.fps();
+        string metaFormatString = rt::str::format(
+          "Frame: %02d/%02d\nFPS:   %.3f\n", mFrameNum, APP_FRAME_RATE, fps);
+        
+        if (!mEnvironmentChanged) {
+            string frameString = rt::str::format(
+                 "Last draw: %d (sec)", time(nullptr) - mEnvironmentChangedTime);
+            metaFormatString += frameString;
+        } else {
+            metaFormatString += "Calculating...";
+        }
+        
+        ofDrawBitmapString(metaFormatString,
+                           DRAW_WINDOW_WIDTH / 2 - 200,
+                           - DRAW_WINDOW_HEIGHT / 2 + 50);
         
     }
     ofPopMatrix();
     
-//    mFrameNum++;
+    mEnvironmentChanged = false;
+    
+    // Update time variables
+    mFrameNum = (mFrameNum + 1) % APP_FRAME_RATE;
+    mTotalFrameNum++;
+    
+    
+    mFpsCounter.newFrame();
 }
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
@@ -174,24 +188,24 @@ void ofApp::keyPressed(int key){
         return;
     }
     
-    ofVec2f oldSourcePoint = sourcePoint;
+    ofVec2f oldSourcePoint = mPlayerLocation;
     
     const int step = 2;
     if (key == OF_KEY_LEFT) {
-        sourcePoint.x -= step;
+        mPlayerLocation.x -= step;
     } else if (key == OF_KEY_RIGHT) {
-        sourcePoint.x += step;
+        mPlayerLocation.x += step;
     } else if (key == OF_KEY_UP) {
-        sourcePoint.y += step;
+        mPlayerLocation.y += step;
     } else if (key == OF_KEY_DOWN) {
-        sourcePoint.y -= step;
+        mPlayerLocation.y -= step;
     }
     
-    ofVec2f newSourcePoint = sourcePoint;
+    ofVec2f newSourcePoint = mPlayerLocation;
     
-    pointingAt += (newSourcePoint - oldSourcePoint);
+    mPlayerPointingAt += (newSourcePoint - oldSourcePoint);
     
-    environmentChanged = true;
+    mEnvironmentChanged = true;
 }
 
 //--------------------------------------------------------------
