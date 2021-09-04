@@ -8,6 +8,8 @@
 #ifndef rt_math_hpp
 #define rt_math_hpp
 
+#define RT_EPSILON 0.01
+
 // Source: https://stackoverflow.com/a/507879
 #define RT_PI 3.1415926535897932384626433832795028841971693993751058209749445923078164062
 
@@ -15,7 +17,7 @@ namespace rt {
 
 namespace math {
 
-bool fequal(float a, float b, float threshold = 0.01);
+bool fequal(float a, float b, float threshold = RT_EPSILON);
 
 float clamp(float value, float lower = 0., float upper = 1.);
 

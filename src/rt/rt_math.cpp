@@ -28,7 +28,7 @@ float rt::math::clamp(float value, float lower, float upper) {
 
 
 float rt::math::abs(float a) {
-    return abs(a);
+    return std::abs(a);
 }
 
 

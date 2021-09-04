@@ -16,9 +16,11 @@
 #include "rt_ray.hpp"
 #include "rt_environment.hpp"
 #include "rt_hyperparams.hpp"
+#include "rt_beam.hpp"
 
 #include <vector>
 
+using namespace std;
 
 namespace rt {
 
@@ -28,7 +30,8 @@ public:
     RayTracer(): RayTracer(Environment()) { }
     RayTracer(Environment environment): environment(environment) {}
     rt::Trace* trace(Ray start, unsigned int depth = 1);
-    std::vector<rt::Trace*> cast(Ray start, float spreadRadians, unsigned int spreadCount, unsigned int depth = 1);
+    vector<rt::Trace*> cast(Ray start, float spreadRadians, unsigned int spreadCount, unsigned int depth = 1);
+    vector<rt::Beam*> beamCast(Ray start, float spreadRadians, unsigned int depth = 1);
 };
 
 }

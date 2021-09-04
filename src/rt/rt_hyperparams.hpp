@@ -15,6 +15,6 @@
 #define RT_MAX_DEPTH (2 << 2)
 #define RT_ENVIRONMENT_FILE "/Users/p13i/Desktop/raytracer/raytracer/data/environment.txt"
 #define RT_SPREAD_RADIANS (RT_PI / 4.f)
-#define RT_NUM_RAYS (2 << 6)
+#define RT_NUM_RAYS (2 << 3)
 
 #endif /* rt_hyperparams_hpp */

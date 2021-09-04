@@ -3,6 +3,7 @@
 #include "rt_parser.hpp"
 #include "rt_hyperparams.hpp"
 #include "rt_str.hpp"
+#include "rt_rand.hpp"
 
 #include <algorithm>
 #include <stdio.h>
@@ -28,9 +29,26 @@ void ofApp::setup(){
     
     ofSetWindowTitle(windowTitle);
     
-    Geometry geo = rt::parser::readGeometry(RT_ENVIRONMENT_FILE);
-    Environment env{geo};
+    mGeometriesList.push_back(Geometry(vector<LineSegment>{
+        LineSegment{{-100, -100}, {-100, +100}},
+        LineSegment{{-200, -100}, {-200, +100}},
+//        LineSegment{{-300, -100}, {-300, +100}},
+    }));
+    
+    mGeometriesList.push_back(rt::parser::readGeometry(RT_ENVIRONMENT_FILE));
+    
+    Environment env{mGeometriesList[0]};
     mRayTracer = RayTracer{env};
+    
+    // Audio
+    mSoundBuffer.assign(APP_AUDIO_RATE, 0.f);
+    
+    ofSoundStreamSetup(
+           APP_AUDIO_NUM_CHANNELS,
+           APP_AUDIO_NUM_INPUTS,
+           APP_AUDIO_SAMPLE_RATE,
+           APP_AUDIO_BUFFER_SIZE,
+           APP_AUDIO_N_NUM_BUFFERS);
 }
 
 //--------------------------------------------------------------
@@ -102,110 +120,103 @@ void ofApp::draw(){
         
         // Draw geometry's edges
         
-        for (LineSegment edge : mRayTracer.environment.geometry.edges) {
-            ofSetColor(ofFloatColor(1, 0, 0));
-
-            ofSetLineWidth(4);
-
-            // The edge from a to b
-            ofDrawLine((edge.a.x), (edge.a.y), (edge.b.x), (edge.b.y));
-
-            // Round caps on wall ends
-            ofDrawCircle((edge.a.x), (edge.a.y), 2);
-            ofDrawCircle((edge.b.x), (edge.b.y), 2);
-        }
-
+        rtDraw(mRayTracer.environment);
+        
         // Draw ray traces
 
-        ofSetColor(ofFloatColor(1, 1, 1, 0.5));  // clear white
-
-        for (Trace *trace : mCachedPaths) {
-            // Draw out rays with diminishiong power (i.e. lineWidth)
-            float lineWidth = 8;
-            while (trace != nullptr && lineWidth > 0.) {
-                ofSetLineWidth(lineWidth);
-                ofDrawLine(trace->vec.origin.x, trace->vec.origin.y, trace->vec.dest.x, trace->vec.dest.y);
-                // Round caps on ray ends
-                ofDrawCircle((trace->vec.origin.x), (trace->vec.origin.y), 4);
-                ofDrawCircle((trace->vec.dest.x), (trace->vec.dest.y), 4);
-                
-                // Move forward
-                lineWidth *= lineWidth > 0.000001 ? 0.9 : 0.;
-                trace = trace->next;
-            }
-
-        }
+        rtDraw(mCachedPaths);
+        
+        vector<Beam*> beams = mRayTracer.beamCast(startingRay, RT_SPREAD_RADIANS);
+        
+        // Draw beams
+        
+        rtDraw(beams);
         
         // Draw source ray
         
-        ofSetColor(ofColor(128, 0, 128));  // purple
+        rtDraw(startingRay, mPlayerPointingAt);
         
-        ofDrawCircle((startingRay.origin.x), (startingRay.origin.y), 4);
-        
-        ofSetLineWidth(2);
-        ofDrawLine((startingRay.origin.x), (startingRay.origin.y),
-                   (startingRay(20).x), (startingRay(20).y));
-        
-        ofDrawCircle((startingRay(20).x), (startingRay(20).y), 2);
-        
-        ofDrawCircle(mPlayerPointingAt.x, mPlayerPointingAt.y, 2);
-        
-        float fps = mFpsCounter.fps();
-        string metaFormatString = rt::str::format(
-          "Frame: %02d/%02d\nFPS:   %.3f\n", mFrameNum, APP_FRAME_RATE, fps);
-        
-        if (!mEnvironmentChanged) {
-            string frameString = rt::str::format(
-                 "Last draw: %d (sec)", time(nullptr) - mEnvironmentChangedTime);
-            metaFormatString += frameString;
-        } else {
-            metaFormatString += "Calculating...";
-        }
-        
-        ofDrawBitmapString(metaFormatString,
-                           DRAW_WINDOW_WIDTH / 2 - 200,
-                           - DRAW_WINDOW_HEIGHT / 2 + 50);
-        
+        // Draw metadata
+        rtDrawMetadata();
     }
     ofPopMatrix();
     
     mEnvironmentChanged = false;
     
+//    // Write to the audio buffer
+//    int nSamplesPerFrame = (APP_AUDIO_RATE / APP_FRAME_RATE);
+//    for (int i = 0; i < nSamplesPerFrame; i++) {
+//
+//        float phase = mSoundBufferWriteIndex / (float) APP_AUDIO_RATE;
+//
+//        assert(0.f <= phase && phase <= 1.f);
+//
+//        int nTones = 7;
+//        float mixRatio = 1 / (float) nTones;
+//
+//        float value = 0;
+//        value += mixRatio * sinusodal(659.2551, phase); // E4
+//        value += mixRatio * sinusodal(440.0000, phase); // A4
+//        value += mixRatio * sinusodal(554.3653, phase); // E4
+//        value += mixRatio * sinusodal(391.9954, phase); // G3
+//        value += mixRatio * sinusodal(164.8138, phase); // E3
+//        value += mixRatio * sinusodal(130.8128, phase); // C3
+//        value += mixRatio * sinusodal(055.0000, phase); // A1
+//
+//        float amp = 1 - Vector(startingRay.origin, {0, 0}).magnitude() / (float) 100;
+//
+//        value *= amp;
+//
+//        mMutex.lock();
+//        mSoundBuffer[mSoundBufferWriteIndex] = value;
+//        mSoundBufferWriteIndex = (mSoundBufferWriteIndex + 1) % APP_AUDIO_RATE;
+//        mMutex.unlock();
+//    }
+    
+    
     // Update time variables
     mFrameNum = (mFrameNum + 1) % APP_FRAME_RATE;
     mTotalFrameNum++;
-    
     
     mFpsCounter.newFrame();
 }
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-    const static std::set<int> handledKeys = {
-        OF_KEY_LEFT, OF_KEY_RIGHT, OF_KEY_UP, OF_KEY_DOWN
-    };
     
-    if (handledKeys.find(key) == handledKeys.end()) {
-        return;
+    if (key == OF_KEY_LEFT ||
+        key == OF_KEY_RIGHT ||
+        key == OF_KEY_UP ||
+        key == OF_KEY_DOWN) {
+        
+        ofVec2f oldSourcePoint = mPlayerLocation;
+        const int step = 10;
+        if (key == OF_KEY_LEFT) {
+            mPlayerLocation.x -= step;
+        } else if (key == OF_KEY_RIGHT) {
+            mPlayerLocation.x += step;
+        } else if (key == OF_KEY_UP) {
+            mPlayerLocation.y += step;
+        } else if (key == OF_KEY_DOWN) {
+            mPlayerLocation.y -= step;
+        }
+        
+        ofVec2f newSourcePoint = mPlayerLocation;
+        mPlayerPointingAt += (newSourcePoint - oldSourcePoint);
+        
+        mEnvironmentChanged = true;
+        
+    } else if ('1' <= key && key <= '9') {
+        int index = key - '1';
+        
+        if (index < 0 || index > mGeometriesList.size() - 1) {
+            return;
+        }
+        
+        Geometry geo = mGeometriesList[index];
+        mRayTracer = RayTracer(Environment{geo});
+        
+        mEnvironmentChanged = true;
     }
-    
-    ofVec2f oldSourcePoint = mPlayerLocation;
-    
-    const int step = 2;
-    if (key == OF_KEY_LEFT) {
-        mPlayerLocation.x -= step;
-    } else if (key == OF_KEY_RIGHT) {
-        mPlayerLocation.x += step;
-    } else if (key == OF_KEY_UP) {
-        mPlayerLocation.y += step;
-    } else if (key == OF_KEY_DOWN) {
-        mPlayerLocation.y -= step;
-    }
-    
-    ofVec2f newSourcePoint = mPlayerLocation;
-    
-    mPlayerPointingAt += (newSourcePoint - oldSourcePoint);
-    
-    mEnvironmentChanged = true;
 }
 
 //--------------------------------------------------------------
@@ -256,4 +267,102 @@ void ofApp::gotMessage(ofMessage msg){
 //--------------------------------------------------------------
 void ofApp::dragEvent(ofDragInfo dragInfo){ 
 
+}
+
+//--------------------------------------------------------------
+void ofApp::audioOut( float * output, int bufferSize, int nChannels ) {
+    for (int i = 0; i < bufferSize * nChannels; i += nChannels) {
+        for (int c = 0; c < nChannels; c++) {
+            output[i + c] = mSoundBuffer[mSoundBufferReadIndex];
+        }
+        mSoundBufferReadIndex = (mSoundBufferReadIndex + nChannels) % APP_AUDIO_RATE;
+    }
+}
+
+void ofApp::rtDraw(vector<Trace*> traces) {
+    ofSetColor(ofFloatColor(1, 1, 1, 0.5));  // clear white
+    for (Trace *trace : mCachedPaths) {
+        // Draw out rays with diminishiong power (i.e. lineWidth)
+        float lineWidth = 8;
+        while (trace != nullptr && lineWidth > 0.) {
+            ofSetLineWidth(lineWidth);
+            ofDrawLine(trace->vec.origin.x, trace->vec.origin.y, trace->vec.dest.x, trace->vec.dest.y);
+            // Round caps on ray ends
+            ofDrawCircle((trace->vec.origin.x), (trace->vec.origin.y), 4);
+            ofDrawCircle((trace->vec.dest.x), (trace->vec.dest.y), 4);
+            
+            // Move forward
+            lineWidth *= lineWidth > 0.000001 ? 0.9 : 0.;
+            trace = trace->next;
+        }
+    }
+}
+
+void ofApp::rtDraw(Ray startingRay, ofVec2f lookingAt) {
+    ofSetColor(ofColor(128, 0, 128));  // purple
+    
+    ofDrawCircle((startingRay.origin.x), (startingRay.origin.y), 4);
+    
+    ofSetLineWidth(2);
+    ofDrawLine((startingRay.origin.x), (startingRay.origin.y),
+               (startingRay(20).x), (startingRay(20).y));
+    
+    ofDrawCircle((startingRay(20).x), (startingRay(20).y), 2);
+    
+    ofDrawCircle(lookingAt.x, lookingAt.y, 2);
+    
+}
+
+void ofApp::rtDraw(vector<Beam*> beams) {
+    
+    srand(42);
+    
+    for (Beam* beam : beams) {
+        Vector a = beam->mBoundA, b = beam->mBoundB;
+        
+        ofSetLineWidth(1);
+        ofPath path = ofPath();
+        path.moveTo(a.origin.x, a.origin.y);
+        path.lineTo(a.dest.x, a.dest.y);
+        path.lineTo(b.dest.x, b.dest.y);
+        path.lineTo(b.origin.x, b.origin.y);
+        ofColor color = ofFloatColor(randF(), randF(), randF(), 0.5); // random
+        path.setFillColor(color);
+        path.draw();
+        
+    }
+}
+
+void ofApp::rtDraw(Environment env) {
+    for (LineSegment edge : env.geometry.edges) {
+        ofSetColor(ofFloatColor(1, 0, 0));
+
+        ofSetLineWidth(4);
+
+        // The edge from a to b
+        ofDrawLine((edge.a.x), (edge.a.y), (edge.b.x), (edge.b.y));
+
+        // Round caps on wall ends
+        ofDrawCircle((edge.a.x), (edge.a.y), 2);
+        ofDrawCircle((edge.b.x), (edge.b.y), 2);
+    }
+
+}
+
+void ofApp::rtDrawMetadata() {
+    float fps = mFpsCounter.fps();
+    string metaFormatString = rt::str::format(
+      "Frame: %02d/%02d\nFPS:   %.3f\n", mFrameNum, APP_FRAME_RATE, fps);
+    
+    if (!mEnvironmentChanged) {
+        string frameString = rt::str::format(
+             "Last draw: %d (sec)", time(nullptr) - mEnvironmentChangedTime);
+        metaFormatString += frameString;
+    } else {
+        metaFormatString += "Calculating...";
+    }
+    
+    ofDrawBitmapString(metaFormatString,
+                       DRAW_WINDOW_WIDTH / 2 - 200,
+                       - DRAW_WINDOW_HEIGHT / 2 + 50);
 }

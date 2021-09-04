@@ -23,6 +23,8 @@ struct Point {
     
     bool operator == (Point other);
     
+    bool operator != (Point other);
+    
     Point operator + (Point other) {
         return Point(x + other.x, y + other.y);
     }
@@ -48,6 +50,8 @@ struct Point {
     float magnitude() {
       return rt::math::sqrt(x * x + y * y);
     }
+    
+    bool fequal(Point other, float threshold = RT_EPSILON);
 };
 
 }

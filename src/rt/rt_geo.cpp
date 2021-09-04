@@ -13,6 +13,9 @@
 
 #include <cmath>
 
+using namespace std;
+using namespace rt;
+
 bool rt::geo::intersection(LineSegment j, LineSegment k, Point& intersectionPoint) {
     float x1 = j.a.x, y1 = j.a.y;
     float x2 = j.b.x, y2 = j.b.y;
@@ -83,4 +86,8 @@ rt::Ray rt::geo::rotate(rt::Ray r, float offsetRadians) {
 //    auto newX = dir.x - cos(offsetRadians),
 //         newY = dir.y - sin(offsetRadians);
     return Ray(r.origin, r.radians() + offsetRadians);
+}
+
+vector<Polygon> rt::geo::algo::find_largest_convex_polygons(vector<LineSegment> allEdges) {
+    
 }
