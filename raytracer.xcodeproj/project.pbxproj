@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		1C1F53FA26BDBC7600374056 /* rt_geometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C1F53F826BDBC7600374056 /* rt_geometry.cpp */; };
 		1C1F53FD26BDBCA200374056 /* rt_environment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C1F53FB26BDBCA200374056 /* rt_environment.cpp */; };
-		1C1F540026BDBDEB00374056 /* rt_hyperparams.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C1F53FE26BDBDEB00374056 /* rt_hyperparams.cpp */; };
 		1C47334426B64910000C1A15 /* rt_point.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C47334226B64910000C1A15 /* rt_point.cpp */; };
 		1C47334726B649E3000C1A15 /* rt_math.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C47334526B649E3000C1A15 /* rt_math.cpp */; };
 		1C64041D26BC9F2300F8A60D /* rt_parser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C64041B26BC9F2300F8A60D /* rt_parser.cpp */; };
@@ -45,9 +44,7 @@
 		1C1F53F926BDBC7600374056 /* rt_geometry.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = rt_geometry.hpp; sourceTree = "<group>"; };
 		1C1F53FB26BDBCA200374056 /* rt_environment.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = rt_environment.cpp; sourceTree = "<group>"; };
 		1C1F53FC26BDBCA200374056 /* rt_environment.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = rt_environment.hpp; sourceTree = "<group>"; };
-		1C1F53FE26BDBDEB00374056 /* rt_hyperparams.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = rt_hyperparams.cpp; sourceTree = "<group>"; };
 		1C1F53FF26BDBDEB00374056 /* rt_hyperparams.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = rt_hyperparams.hpp; sourceTree = "<group>"; };
-		1C37A38926E1CCCA00F6FE25 /* ofApp_rtDraw.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ofApp_rtDraw.hpp; sourceTree = "<group>"; };
 		1C47334226B64910000C1A15 /* rt_point.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = rt_point.cpp; sourceTree = "<group>"; };
 		1C47334326B64910000C1A15 /* rt_point.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = rt_point.hpp; sourceTree = "<group>"; };
 		1C47334526B649E3000C1A15 /* rt_math.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = rt_math.cpp; sourceTree = "<group>"; };
@@ -285,7 +282,6 @@
 		1C6951A426B2FEE000771D62 /* rt */ = {
 			isa = PBXGroup;
 			children = (
-				1C1F53FE26BDBDEB00374056 /* rt_hyperparams.cpp */,
 				1C1F53FF26BDBDEB00374056 /* rt_hyperparams.hpp */,
 				1C6951A526B2FEEE00771D62 /* rt_raytracer.cpp */,
 				1C6951A626B2FEEE00771D62 /* rt_raytracer.hpp */,
@@ -643,7 +639,6 @@
 				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
 				E4B69E1E0A3A1BDC003C02F2 /* ofApp.cpp */,
 				E4B69E1F0A3A1BDC003C02F2 /* ofApp.h */,
-				1C37A38926E1CCCA00F6FE25 /* ofApp_rtDraw.hpp */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -749,7 +744,6 @@
 				1C64041D26BC9F2300F8A60D /* rt_parser.cpp in Sources */,
 				1C82586326B670F000FD11D0 /* rt_ray.cpp in Sources */,
 				1C1F53FA26BDBC7600374056 /* rt_geometry.cpp in Sources */,
-				1C1F540026BDBDEB00374056 /* rt_hyperparams.cpp in Sources */,
 				1C47334726B649E3000C1A15 /* rt_math.cpp in Sources */,
 				1C82585A26B66DEB00FD11D0 /* rt_linesegment.cpp in Sources */,
 				1C47334426B64910000C1A15 /* rt_point.cpp in Sources */,

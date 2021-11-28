@@ -29,9 +29,9 @@ public:
     Environment environment;
     RayTracer(): RayTracer(Environment()) { }
     RayTracer(Environment environment): environment(environment) {}
-    rt::Trace* trace(Ray start, unsigned int depth = 1);
-    vector<rt::Trace*> cast(Ray start, float spreadRadians, unsigned int spreadCount, unsigned int depth = 1);
-    vector<rt::Beam*> beamCast(Ray start, float spreadRadians, unsigned int depth = 1);
+    Trace<Vector>* trace(Ray start, unsigned int depth = 1);
+    vector<Trace<Vector>*> cast(Ray start, float spreadRadians, unsigned int spreadCount, unsigned int depth = 1);
+    vector<Trace<Beam*>*> beamCast(Ray start, float spreadRadians, unsigned int depth = 1);
 };
 
 }

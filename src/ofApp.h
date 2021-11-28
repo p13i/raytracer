@@ -128,7 +128,7 @@ public:
     time_t mAppSetupTime;
     RayTracer mRayTracer;
     ofVec2f mPlayerLocation, mPlayerPointingAt;
-    vector<Trace*> mCachedPaths;
+    vector<Trace<Vector>*> mCachedPaths;
     bool mEnvironmentChanged = false;
     time_t mEnvironmentChangedTime;
     unsigned int mFrameNum = 0;
@@ -154,9 +154,9 @@ public:
     void gotMessage(ofMessage msg);
     void audioOut( float * output, int bufferSize, int nChannels );
     
-    void rtDraw(vector<Trace*> traces);
+    void rtDraw(vector<Trace<Vector>*> traces);
     void rtDraw(Ray startingRay, ofVec2f lookingAt);
-    void rtDraw(vector<Beam*> beams);
+    void rtDraw(vector<Trace<Beam*>*> beams);
     void rtDraw(Environment env);
     void rtDrawMetadata();
     

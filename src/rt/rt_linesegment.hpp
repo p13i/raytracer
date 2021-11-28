@@ -18,6 +18,12 @@ struct LineSegment {
     LineSegment(): LineSegment(rt::Point(), rt::Point()) { }
     
     LineSegment(rt::Point a, rt::Point b): a(a), b(b) { }
+    
+    Point midpoint();
+    
+    bool operator == (LineSegment other);
+    
+    bool operator != (LineSegment other);
 };
 
 }

@@ -12,15 +12,16 @@
 
 namespace rt {
 
+template <class T>
 struct Trace {
-    Vector vec;
+    T data;
     float luminance;
     
     bool isTerminal;
-    struct rt::Trace *next;
+    struct Trace<T> *next;
     
-    Trace(Vector vec, float luminance, bool isTerminal = false, Trace *next = nullptr):
-        vec(vec), luminance(luminance), isTerminal(isTerminal), next(next) { }
+    Trace(T data, float luminance, bool isTerminal = false, Trace *next = nullptr):
+        data(data), luminance(luminance), isTerminal(isTerminal), next(next) { }
 };
 
 }

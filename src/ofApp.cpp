@@ -126,7 +126,7 @@ void ofApp::draw(){
 
         rtDraw(mCachedPaths);
         
-        vector<Beam*> beams = mRayTracer.beamCast(startingRay, RT_SPREAD_RADIANS);
+        vector<Trace<Beam*>*> beams = mRayTracer.beamCast(startingRay, RT_SPREAD_RADIANS, 2);
         
         // Draw beams
         
@@ -143,35 +143,35 @@ void ofApp::draw(){
     
     mEnvironmentChanged = false;
     
-//    // Write to the audio buffer
-//    int nSamplesPerFrame = (APP_AUDIO_RATE / APP_FRAME_RATE);
-//    for (int i = 0; i < nSamplesPerFrame; i++) {
-//
-//        float phase = mSoundBufferWriteIndex / (float) APP_AUDIO_RATE;
-//
-//        assert(0.f <= phase && phase <= 1.f);
-//
-//        int nTones = 7;
-//        float mixRatio = 1 / (float) nTones;
-//
-//        float value = 0;
-//        value += mixRatio * sinusodal(659.2551, phase); // E4
-//        value += mixRatio * sinusodal(440.0000, phase); // A4
-//        value += mixRatio * sinusodal(554.3653, phase); // E4
-//        value += mixRatio * sinusodal(391.9954, phase); // G3
-//        value += mixRatio * sinusodal(164.8138, phase); // E3
-//        value += mixRatio * sinusodal(130.8128, phase); // C3
-//        value += mixRatio * sinusodal(055.0000, phase); // A1
-//
-//        float amp = 1 - Vector(startingRay.origin, {0, 0}).magnitude() / (float) 100;
-//
-//        value *= amp;
-//
-//        mMutex.lock();
-//        mSoundBuffer[mSoundBufferWriteIndex] = value;
-//        mSoundBufferWriteIndex = (mSoundBufferWriteIndex + 1) % APP_AUDIO_RATE;
-//        mMutex.unlock();
-//    }
+    // Write to the audio buffer
+    int nSamplesPerFrame = (APP_AUDIO_RATE / APP_FRAME_RATE);
+    for (int i = 0; i < nSamplesPerFrame; i++) {
+
+        float phase = mSoundBufferWriteIndex / (float) APP_AUDIO_RATE;
+
+        assert(0.f <= phase && phase <= 1.f);
+
+        int nTones = 7;
+        float mixRatio = 1 / (float) nTones;
+
+        float value = 0;
+        value += mixRatio * sinusodal(659.2551, phase); // E4
+        value += mixRatio * sinusodal(440.0000, phase); // A4
+        value += mixRatio * sinusodal(554.3653, phase); // E4
+        value += mixRatio * sinusodal(391.9954, phase); // G3
+        value += mixRatio * sinusodal(164.8138, phase); // E3
+        value += mixRatio * sinusodal(130.8128, phase); // C3
+        value += mixRatio * sinusodal(055.0000, phase); // A1
+
+        float amp = 1 - Vector(startingRay.origin, {0, 0}).magnitude() / 100.f;
+
+        value *= amp;
+
+        mMutex.lock();
+        mSoundBuffer[mSoundBufferWriteIndex] = value;
+        mSoundBufferWriteIndex = (mSoundBufferWriteIndex + 1) % APP_AUDIO_RATE;
+        mMutex.unlock();
+    }
     
     
     // Update time variables
@@ -279,17 +279,17 @@ void ofApp::audioOut( float * output, int bufferSize, int nChannels ) {
     }
 }
 
-void ofApp::rtDraw(vector<Trace*> traces) {
+void ofApp::rtDraw(vector<Trace<Vector>*> traces) {
     ofSetColor(ofFloatColor(1, 1, 1, 0.5));  // clear white
-    for (Trace *trace : mCachedPaths) {
+    for (Trace<Vector> *trace : mCachedPaths) {
         // Draw out rays with diminishiong power (i.e. lineWidth)
         float lineWidth = 8;
         while (trace != nullptr && lineWidth > 0.) {
             ofSetLineWidth(lineWidth);
-            ofDrawLine(trace->vec.origin.x, trace->vec.origin.y, trace->vec.dest.x, trace->vec.dest.y);
+            ofDrawLine(trace->data.origin.x, trace->data.origin.y, trace->data.dest.x, trace->data.dest.y);
             // Round caps on ray ends
-            ofDrawCircle((trace->vec.origin.x), (trace->vec.origin.y), 4);
-            ofDrawCircle((trace->vec.dest.x), (trace->vec.dest.y), 4);
+            ofDrawCircle((trace->data.origin.x), (trace->data.origin.y), 4);
+            ofDrawCircle((trace->data.dest.x), (trace->data.dest.y), 4);
             
             // Move forward
             lineWidth *= lineWidth > 0.000001 ? 0.9 : 0.;
@@ -313,12 +313,12 @@ void ofApp::rtDraw(Ray startingRay, ofVec2f lookingAt) {
     
 }
 
-void ofApp::rtDraw(vector<Beam*> beams) {
+void ofApp::rtDraw(vector<Trace<Beam*>*> traces) {
     
     srand(42);
     
-    for (Beam* beam : beams) {
-        Vector a = beam->mBoundA, b = beam->mBoundB;
+    for (Trace<Beam*>* beamTrace : traces) {
+        Vector a = beamTrace->data->mBoundA, b = beamTrace->data->mBoundB;
         
         ofSetLineWidth(1);
         ofPath path = ofPath();
