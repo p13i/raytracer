@@ -89,5 +89,5 @@ rt::Ray rt::geo::rotate(rt::Ray r, float offsetRadians) {
 }
 
 vector<Polygon> rt::geo::algo::find_largest_convex_polygons(vector<LineSegment> allEdges) {
-    
+    return {};\
 }

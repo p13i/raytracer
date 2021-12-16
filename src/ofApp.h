@@ -2,7 +2,6 @@
 #define ofApp_h
 
 #include "ofMain.h"
-#include "ofApp_rtDraw.hpp"
 
 #include "rt_raytracer.hpp"
 
@@ -81,12 +80,14 @@ public:
     }
 };
 
+#if 0
 vector<float> operator * (vector<float>& vec, float mul) {
     for (int i = 0; i < vec.size(); i++) {
         vec[i] *= mul;
     }
     return vec;
 }
+#endif 
 
 class FpsCounter {
     
