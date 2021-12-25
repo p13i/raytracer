@@ -14,9 +14,7 @@
 #define RT_TEST(case, code) rt::log(rt::str::format("➡️ %s", case)); code;
 #define RT_ASSERT(cond, msg) if (!(cond)) { rt::log("❌ FAIL ", true, false); rt::log(msg, false, true); exit(1); } else { rt::log("✅ PASS ", true, false); rt::log(msg, false, true); }
 
-#ifdef _WIN32
 #include <functional>
-#endif
 
 namespace rt { namespace test {
 

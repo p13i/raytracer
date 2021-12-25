@@ -44,10 +44,10 @@ class PureTone {
 public:
     PureTone(float frequency): mFrequency(frequency) {}
     
-    vector<float> asBuffer(unsigned int length) {
+    vector<float> asBuffer(size_t length) {
         vector<float> buffer;
         buffer.assign(length, 0.f);
-        for (int i = 0; i < length; i++) {
+        for (size_t i = 0; i < length; i++) {
             float phase = (i / (float) length);
             buffer[i] = sinusodal(mFrequency, phase);
         }
@@ -61,11 +61,11 @@ public:
 class rtOfColorManager {
 private:
     vector<ofColor> colors;
-    unsigned int mCurrentColorIndex = 0;
+    size_t mCurrentColorIndex = 0;
     
 public:
     rtOfColorManager(unsigned int count) {
-        for (int i = 0; i < count; i++) {
+        for (size_t i = 0; i < count; i++) {
             colors.push_back(ofColor(randF(), randF(), randF()));
         }
     }
@@ -73,9 +73,10 @@ public:
     ofColor nextColor() {
         ofColor color = colors[mCurrentColorIndex];
         mCurrentColorIndex = (mCurrentColorIndex + 1) % colors.size();
+        return color;
     }
     
-    ofColor reset() {
+    void reset() {
         mCurrentColorIndex = 0;
     }
 };

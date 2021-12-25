@@ -29,7 +29,6 @@ struct Ray {
     Ray(rt::Point origin, rt::Vector direction): origin(origin), direction(direction) { }
     
     rt::Point operator () (float time) {
-        rt::Vector atTime = direction.unit() * time;
         return origin + (direction * time).dest;
     }
     
