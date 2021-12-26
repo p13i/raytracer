@@ -91,12 +91,45 @@ void ofApp::setup(){
     // Audio
     mSoundBuffer.assign(APP_AUDIO_RATE, 0.f);
     
-    ofSoundStreamSetup(
-           APP_AUDIO_NUM_CHANNELS,
-           APP_AUDIO_NUM_INPUTS,
-           APP_AUDIO_SAMPLE_RATE,
-           APP_AUDIO_BUFFER_SIZE,
-           APP_AUDIO_N_NUM_BUFFERS);
+    
+    // Write to the audio buffer
+    for (int i = 0; i < APP_AUDIO_RATE; i++) {
+
+        float phase = mSoundBufferWriteIndex / (float) APP_AUDIO_RATE;
+
+        assert(0.f <= phase && phase <= 1.f);
+
+        int nTones = 7;
+        float mixRatio = 1 / (float) nTones;
+
+        float value = 0;
+        value += mixRatio * sinusodal(659.2551, phase); // E4
+        value += mixRatio * sinusodal(440.0000, phase); // A4
+        value += mixRatio * sinusodal(554.3653, phase); // E4
+        value += mixRatio * sinusodal(391.9954, phase); // G3
+        value += mixRatio * sinusodal(164.8138, phase); // E3
+        value += mixRatio * sinusodal(130.8128, phase); // C3
+        value += mixRatio * sinusodal(055.0000, phase); // A1
+        
+        // adjust into [0, 1]
+        value += 1;
+        value /= 2;
+
+        mSoundBuffer[mSoundBufferWriteIndex] = value;
+        mSoundBufferWriteIndex = (mSoundBufferWriteIndex + 1) % APP_AUDIO_RATE;
+    }
+    
+    ofSoundStreamSettings settings;
+
+    settings.bufferSize = 		APP_AUDIO_BUFFER_SIZE;
+    settings.numBuffers = 		APP_AUDIO_N_NUM_BUFFERS;
+    settings.numInputChannels = 	APP_AUDIO_NUM_INPUTS;
+    settings.numOutputChannels = 	APP_AUDIO_NUM_CHANNELS;
+    settings.sampleRate = 		APP_AUDIO_SAMPLE_RATE;
+    settings.setOutListener(this);
+    settings.setApi(ofSoundDevice::PULSE);
+
+    ofSoundStreamSetup(settings);
 }
 
 //--------------------------------------------------------------
@@ -191,37 +224,6 @@ void ofApp::draw(){
     
     mEnvironmentChanged = false;
     
-    // Write to the audio buffer
-    int nSamplesPerFrame = (APP_AUDIO_RATE / APP_FRAME_RATE);
-    for (int i = 0; i < nSamplesPerFrame; i++) {
-
-        float phase = mSoundBufferWriteIndex / (float) APP_AUDIO_RATE;
-
-        assert(0.f <= phase && phase <= 1.f);
-
-        int nTones = 7;
-        float mixRatio = 1 / (float) nTones;
-
-        float value = 0;
-        value += mixRatio * sinusodal(659.2551, phase); // E4
-        value += mixRatio * sinusodal(440.0000, phase); // A4
-        value += mixRatio * sinusodal(554.3653, phase); // E4
-        value += mixRatio * sinusodal(391.9954, phase); // G3
-        value += mixRatio * sinusodal(164.8138, phase); // E3
-        value += mixRatio * sinusodal(130.8128, phase); // C3
-        value += mixRatio * sinusodal(055.0000, phase); // A1
-
-        float amp = 1 - Vector(startingRay.origin, {0, 0}).magnitude() / 100.f;
-
-        value *= amp;
-
-        mMutex.lock();
-        mSoundBuffer[mSoundBufferWriteIndex] = value;
-        mSoundBufferWriteIndex = (mSoundBufferWriteIndex + 1) % APP_AUDIO_RATE;
-        mMutex.unlock();
-    }
-    
-    
     // Update time variables
     mFrameNum = (mFrameNum + 1) % APP_FRAME_RATE;
     mTotalFrameNum++;
@@ -256,7 +258,7 @@ void ofApp::keyPressed(int key){
     } else if ('1' <= key && key <= '9') {
         int index = key - '1';
         
-        if (index < 0 || index > mGeometriesList.size() - 1) {
+        if (index < 0 || (index > mGeometriesList.size() - 1)) {
             return;
         }
         
@@ -318,10 +320,13 @@ void ofApp::dragEvent(ofDragInfo dragInfo){
 }
 
 //--------------------------------------------------------------
-void ofApp::audioOut( float * output, int bufferSize, int nChannels ) {
+void ofApp::audioOut(ofSoundBuffer& soundBuffer) {
+    size_t bufferSize = soundBuffer.getNumFrames();
+    size_t nChannels = soundBuffer.getNumChannels();
+
     for (int i = 0; i < bufferSize * nChannels; i += nChannels) {
         for (int c = 0; c < nChannels; c++) {
-            output[i + c] = mSoundBuffer[mSoundBufferReadIndex];
+            soundBuffer[i + c] = mSoundBuffer[mSoundBufferReadIndex];
         }
         mSoundBufferReadIndex = (mSoundBufferReadIndex + nChannels) % APP_AUDIO_RATE;
     }

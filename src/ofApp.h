@@ -154,7 +154,8 @@ public:
     void windowResized(int w, int h);
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
-    void audioOut( float * output, int bufferSize, int nChannels );
+    void audioOut( ofSoundBuffer& soundBuffer );
+    void audioOutCallback(ofSoundBuffer& soundbuffer);
     
     void rtDraw(vector<Trace<Vector>*> traces);
     void rtDraw(Ray startingRay, ofVec2f lookingAt);
