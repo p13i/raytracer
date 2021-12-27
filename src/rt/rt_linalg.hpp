@@ -9,6 +9,7 @@
 #define rt_linalg_hpp
 
 #include "rt_vector.hpp"
+#include "rt_settings.hpp"
 
 
 namespace rt { namespace linalg {
@@ -19,11 +20,9 @@ struct Matrix2x2 {
     float a, b, c, d;
     
     Matrix2x2(float a, float b, float c, float d): a(a), b(b), c(c), d(d) { }
-    
-    float determinant();
-};
 
-float angleBetween(rt::Vector a, rt::Vector b);
+    float determinant() const;
+};
 
 } }
 

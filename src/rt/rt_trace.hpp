@@ -1,10 +1,3 @@
-//
-//  rt_trace.hpp
-//  raytracer
-//
-//  Created by Pramod Kotipalli on 8/1/21.
-//
-
 #ifndef rt_trace_hpp
 #define rt_trace_hpp
 

@@ -1,10 +1,3 @@
-//
-//  rt_linesegment.hpp
-//  raytracer
-//
-//  Created by Pramod Kotipalli on 7/31/21.
-//
-
 #ifndef rt_linesegment_hpp
 #define rt_linesegment_hpp
 
@@ -13,14 +6,12 @@
 namespace rt {
 
 struct LineSegment {
-    rt::Point a, b;
+    Point a, b;
     
     LineSegment(): LineSegment(rt::Point(), rt::Point()) { }
     
-    LineSegment(rt::Point a, rt::Point b): a(a), b(b) { }
-    
-    Point midpoint();
-    
+    LineSegment(Point a, Point b): a(a), b(b) { }
+
     bool operator == (LineSegment other);
     
     bool operator != (LineSegment other);
@@ -28,4 +19,4 @@ struct LineSegment {
 
 }
 
-#endif /* rt_linesegment_hpp */
+#endif // rt_linesegment_hpp

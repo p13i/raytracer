@@ -1,28 +1,44 @@
-//
-//  rt_point.cpp
-//  raytracer
-//
-//  Created by Pramod Kotipalli on 7/31/21.
-//
-
 #include "rt_point.hpp"
-#include "rt_math.hpp"
 
-bool rt::Point::operator == (rt::Point other) {
-    return x == other.x && y == other.y;
+#include "rt_settings.hpp"
+
+#include <cmath>
+
+using namespace rt;
+using namespace std;
+
+bool Point::operator==(Point other) const {
+    float xDiff = abs(x - other.x);
+    float yDiff = abs(y - other.y);
+    return xDiff < RT_EPSILON && yDiff < RT_EPSILON;
 }
 
-bool rt::Point::operator != (rt::Point other) {
+bool Point::operator!=(Point other) const {
     return !(*this == other);
 }
 
-std::ostream& operator << (std::ostream& os, const rt::Point& point)
-{
-    os << "Point(" << point.x << ", " << point.y << ')';
-    return os;
+Point Point::operator+(Point other) const {
+    return {x + other.x, y + other.y};
 }
 
-bool rt::Point::fequal(Point other, float threshold) {
-    return rt::math::fequal(this->x, other.x, threshold)
-        && rt::math::fequal(this->y, other.y, threshold);
+Point Point::operator-(Point other) const {
+    return {x - other.x, y - other.y};
+}
+
+Point Point::operator*(float scalar) const {
+    return {x * scalar, y * scalar};
+}
+
+Point Point::operator/(float scalar) const {
+    return {x / scalar, y / scalar};
+}
+
+// Source: https://stackoverflow.com/a/41648840
+// Required for use in std::set
+bool Point::operator<(Point other) const {
+    return (x < other.x) || (other.x >= x && (y < other.y));
+}
+
+ostream &operator<<(ostream &os, const Point &point) {
+    return os << "Point(" << point.x << ", " << point.y << ')';
 }

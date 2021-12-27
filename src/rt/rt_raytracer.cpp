@@ -1,17 +1,9 @@
-//
-//  raytracer.cpp
-//  raytracer
-//
-//  Created by Pramod Kotipalli on 7/29/21.
-//
-
 #include "rt_raytracer.hpp"
 
 #include "rt_math.hpp"
 #include "rt_geo.hpp"
 #include "rt_str.hpp"
 #include "rt_vector.hpp"
-#include "rt_log.hpp"
 #include "rt_linesegment.hpp"
 
 #include <set>
@@ -36,7 +28,7 @@ rt::Trace<Vector>* rt::RayTracer::trace(rt::Ray start, unsigned int depth) {
     
     Point intersectionPoint;
     LineSegment intersectedEdge;
-    bool intersection = this->environment.geometry.intersection(start, intersectionPoint, intersectedEdge);
+    bool intersection = this->mEnvironment.mGeometry.intersection(start, intersectionPoint, intersectedEdge);
     
     if (intersection) {
 
@@ -98,10 +90,10 @@ std::vector<Trace<Beam*>*> RayTracer::beamCast(Ray start, float spreadRadians, u
     const Point o = start.origin;
     
     // Brute force algorithm:
-    // 1. Get all unique points in the geometry
+    // 1. Get all unique points in the mGeometry
     
     vector<Point> allPoints;
-    for (LineSegment edge : environment.geometry.edges) {
+    for (LineSegment edge : mEnvironment.mGeometry.edges) {
         allPoints.push_back(edge.a);
         allPoints.push_back(edge.b);
     }
@@ -110,19 +102,19 @@ std::vector<Trace<Beam*>*> RayTracer::beamCast(Ray start, float spreadRadians, u
     set<Point> allVisiblePointsSet;
     for (Point point : allPoints) {
         
-        // Only add lines that do not intersect with the geometry
+        // Only add lines that do not intersect with the mGeometry
         
         Ray intersectionStart(start.origin, point);
         Point intersectionPoint;
         LineSegment intersectedEdge;
-        bool intersection = environment.geometry.intersection(intersectionStart, intersectionPoint, intersectedEdge);
+        bool intersection = mEnvironment.mGeometry.intersection(intersectionStart, intersectionPoint, intersectedEdge);
 
         if (intersection) {
-            bool intersectA = intersectionPoint.fequal(intersectedEdge.a);
-            bool intersectB = intersectionPoint.fequal(intersectedEdge.b);
+            bool intersectA = intersectionPoint == intersectedEdge.a;
+            bool intersectB = intersectionPoint == intersectedEdge.b;
 
-            intersectA &= intersectedEdge.a.fequal(point);
-            intersectB &= intersectedEdge.b.fequal(point);
+            intersectA &= intersectedEdge.a == point;
+            intersectB &= intersectedEdge.b == point;
             
             if (intersectA || intersectB) {
                 intersection = false;
@@ -189,7 +181,7 @@ std::vector<Trace<Beam*>*> RayTracer::beamCast(Ray start, float spreadRadians, u
         }
     }
     
-    int i = 0;
+    size_t i = 0;
     while (i < beams.size()) {
         Beam *beam = beams[i];
         Vector boundA = beam->mBoundA;
@@ -205,12 +197,12 @@ std::vector<Trace<Beam*>*> RayTracer::beamCast(Ray start, float spreadRadians, u
             
             Point intersectionPoint;
             if (rt::geo::intersection(endOfBoundsOuterSegment, otherBeamBoundA.lineSegment(), intersectionPoint)
-                && !intersectionPoint.fequal(otherBeamBoundA.origin) && !intersectionPoint.fequal(otherBeamBoundA.dest)) {
+                && intersectionPoint != otherBeamBoundA.origin && intersectionPoint != otherBeamBoundA.dest) {
                 shouldRemove = true;
             }
             
             if (rt::geo::intersection(endOfBoundsOuterSegment, otherBeamBoundB.lineSegment(), intersectionPoint)
-                && !intersectionPoint.fequal(otherBeamBoundB.origin) && !intersectionPoint.fequal(otherBeamBoundB.dest)) {
+                && intersectionPoint != otherBeamBoundB.origin && intersectionPoint != otherBeamBoundB.dest) {
                 shouldRemove = true;
             }
         }
@@ -231,13 +223,13 @@ std::vector<Trace<Beam*>*> RayTracer::beamCast(Ray start, float spreadRadians, u
         Point intersectionPointA;
         LineSegment intersectedEdgeA;
         
-        bool intersectionA = environment.geometry.intersection(castRayA, intersectionPointA, intersectedEdgeA);
+        bool intersectionA = mEnvironment.mGeometry.intersection(castRayA, intersectionPointA, intersectedEdgeA);
         
         Ray castRayB{boundB.origin, boundB.dest};
         Point intersectionPointB;
         LineSegment intersectedEdgeB;
         
-        bool intersectionB = environment.geometry.intersection(castRayA, intersectionPointA, intersectedEdgeA);
+        bool intersectionB = mEnvironment.mGeometry.intersection(castRayA, intersectionPointA, intersectedEdgeA);
         
         if (intersectedEdgeA == intersectedEdgeB) {
             // Perform a reflection

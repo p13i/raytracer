@@ -30,7 +30,7 @@ using namespace rt;
 
 #include <random>
 
-auto sinusodal = [](int freqencyHz, float phase) {
+auto sinusodal = [](float freqencyHz, float phase) {
     return sin(freqencyHz * 2 * PI * phase);
 };
 

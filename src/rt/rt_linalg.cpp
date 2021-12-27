@@ -7,13 +7,8 @@
 
 #include "rt_linalg.hpp"
 
-#include "rt_geo.hpp"
+#include "rt_settings.hpp"
 
-float rt::linalg::Matrix2x2::determinant() {
+float rt::linalg::Matrix2x2::determinant() const {
     return a * d - c * b;
-}
-
-float rt::linalg::angleBetween(rt::Vector u, rt::Vector v) {
-    rt::Point pu = u.unit().dest, pv = v.unit().dest;
-    return rt::geo::dot(pu, pv) / (pu.magnitude() * pv.magnitude());
 }

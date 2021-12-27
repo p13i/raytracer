@@ -7,18 +7,15 @@
 
 #include "rt_vector.hpp"
 
-rt::Vector operator * (int scalar, rt::Vector vec) {
+using namespace std;
+using namespace rt;
+
+Vector operator * (float scalar, Vector vec) {
     auto newDest = vec.origin + (vec.dest - vec.origin) * scalar;
-    return rt::Vector(vec.origin, newDest);
+    return {vec.origin, newDest};
 }
 
-rt::Vector operator * (float scalar, rt::Vector vec) {
-    return vec * scalar;
-}
-
-std::ostream& operator << (std::ostream& os, const rt::Vector& vec)
+ostream& operator << (ostream& os, const Vector& vec)
 {
-    os << "Vector(";
-    os << vec.origin << ", " << vec.dest << ')';
-    return os;
+    return os << "Vector(" << vec.origin << ", " << vec.dest << ')';
 }

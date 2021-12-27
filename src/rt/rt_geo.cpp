@@ -7,6 +7,7 @@
 
 #include "rt_geo.hpp"
 
+#include "rt_settings.hpp"
 #include "rt_ray.hpp"
 #include "rt_linalg.hpp"
 #include "rt_vector.hpp"
@@ -58,24 +59,24 @@ float rt::geo::dist(Point a, Point b) {
 rt::Vector rt::geo::normal(rt::LineSegment ls) {
     float x1 = ls.a.x, y1 = ls.a.y, x2 = ls.b.x, y2 = ls.b.y;
     float dx = x2 - x1, dy = y2 - y1;
-    return Vector({-dy, dx}).unit();
+    return Vector(Point{-dy, dx}).unit();
 }
 
 float rt::geo::dot(const rt::Point& a, const rt::Point& b) {
     return a.x * b.x + a.y * b.y;
 }
 
-rt::Ray rt::geo::reflect(rt::Vector forwardTrace, LineSegment intersectedEdge) {
+Ray geo::reflect(Vector forwardTrace, LineSegment intersectedEdge) {
     
-    rt::Point intersectionPoint;
-    if (!rt::geo::intersection(forwardTrace.lineSegment(), {intersectedEdge.a, intersectedEdge.b}, intersectionPoint)) {
-        return {};
+    Point intersectionPoint;
+    if (!geo::intersection(forwardTrace.lineSegment(), {intersectedEdge.a, intersectedEdge.b}, intersectionPoint)) {
+        return Ray{};
     }
 
     auto d = forwardTrace.unit();
     auto n = rt::geo::normal(intersectedEdge);
     auto dot = rt::geo::dot(forwardTrace.unit().dest, n.unit().dest);
-    auto r = d - 2 * n * dot;
+    auto r = d - 2.f * n * dot;
     r = r.unit();
     
     return rt::Ray(forwardTrace.dest, r);
@@ -86,8 +87,4 @@ rt::Ray rt::geo::rotate(rt::Ray r, float offsetRadians) {
 //    auto newX = dir.x - cos(offsetRadians),
 //         newY = dir.y - sin(offsetRadians);
     return Ray(r.origin, r.radians() + offsetRadians);
-}
-
-vector<Polygon> rt::geo::algo::find_largest_convex_polygons(vector<LineSegment> allEdges) {
-    return {};\
 }

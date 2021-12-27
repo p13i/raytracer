@@ -1,14 +1,8 @@
-//
-//  rt_vector.hpp
-//  raytracer
-//
-//  Created by Pramod Kotipalli on 7/31/21.
-//
-
 #ifndef rt_vector_hpp
 #define rt_vector_hpp
 
 #include <ostream>
+#include <cmath>
 
 #include "rt_point.hpp"
 #include "rt_linesegment.hpp"
@@ -18,30 +12,30 @@ namespace rt {
 
 struct Vector {
 
-    rt::Point origin, dest;  // from, to
+    Point origin, dest;  // from, to
     
-    Vector(rt::Point dest): origin({0, 0}), dest(dest) { }
+    Vector(Point dest): origin({0, 0}), dest(dest) { }
     
-    Vector(rt::Point orig, rt::Point dest): origin(orig), dest(dest) { }
+    Vector(Point orig, Point dest): origin(orig), dest(dest) { }
     
-    rt::Point _direction() {
+    Point _direction() const {
         return dest - origin;
     }
     
-    Vector unit() {
+    Vector unit() const {
         return {_direction() / magnitude()};
     }
     
-    rt::LineSegment lineSegment() {
+    rt::LineSegment lineSegment() const {
         return {origin, dest};
     }
     
-    float magnitude() {
+    float magnitude() const {
         auto dir = _direction();
-        return rt::math::sqrt(dir.x * dir.x + dir.y * dir.y);
+        return sqrtf(dir.x * dir.x + dir.y * dir.y);
     }
     
-    Vector operator * (float scalar) {
+    Vector operator * (float scalar) const {
         auto newDest = origin + (dest - origin) * scalar;
         return Vector(origin, newDest);
     }
