@@ -78,20 +78,16 @@ void ofApp::setup() {
     ofSoundStreamSetup(settings);
 }
 
-//--------------------------------------------------------------
-void ofApp::update() {
-
-    // Write to the audio buffer
-    size_t numSamplesForUpdate = APP_AUDIO_SAMPLE_RATE / APP_FRAME_RATE;
+static void extracted(ofApp &object, vector<float> &mSoundBuffer, unsigned int &mSoundBufferWriteIndex, size_t numSamplesForUpdate) {
     for (size_t i = 0; i < numSamplesForUpdate; i++) {
-
-        float phase = (float) mSoundBufferWriteIndex / (float) APP_AUDIO_RATE;
-
+        
+        float phase = (float) object.mSoundBufferWriteIndex / (float) APP_AUDIO_RATE;
+        
         assert(0.f <= phase && phase <= 1.f);
-
+        
         int nTones = 7;
         float mixRatio = 1 / (float) nTones;
-
+        
         float value = 0;
         value += mixRatio * sinusodal(659.2551f, phase); // E4
         value += mixRatio * sinusodal(440.0000f, phase); // A4
@@ -100,18 +96,26 @@ void ofApp::update() {
         value += mixRatio * sinusodal(164.8138f, phase); // E3
         value += mixRatio * sinusodal(130.8128f, phase); // C3
         value += mixRatio * sinusodal(055.0000f, phase); // A1
-
+        
         // adjust into [0, 1]
         value += 1;
         value /= 2;
-
-        mMutex.lock();
+        
+        object.mMutex.lock();
         {
-            mSoundBuffer[mSoundBufferWriteIndex] = value;
-            mSoundBufferWriteIndex = (mSoundBufferWriteIndex + 1) % APP_AUDIO_RATE;
+            object.mSoundBuffer[object.mSoundBufferWriteIndex] = value;
+            object.mSoundBufferWriteIndex = (object.mSoundBufferWriteIndex + 1) % APP_AUDIO_RATE;
         }
-        mMutex.unlock();
+        object.mMutex.unlock();
     }
+}
+
+//--------------------------------------------------------------
+void ofApp::update() {
+
+    // Write to the audio buffer
+    size_t numSamplesForUpdate = APP_AUDIO_SAMPLE_RATE / APP_FRAME_RATE;
+    extracted(*this, mSoundBuffer, mSoundBufferWriteIndex, numSamplesForUpdate);
 
 }
 

@@ -163,7 +163,6 @@ public:
     void rtDraw(Environment env);
     void rtDrawMetadata();
     
-private:
     vector<float> mSoundBuffer;
     unsigned int mSoundBufferReadIndex = 0;
     unsigned int mSoundBufferWriteIndex = 0;

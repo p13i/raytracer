@@ -2,9 +2,15 @@
 #include "ofApp.h"
 
 #include "rt_raytracer.hpp"
+#include "rt_tests.hpp"
 
 //========================================================================
 int main(int argc, char *argv[]){
+    
+    // Run tests first
+    rt::test::main(argc, argv);
+    
+    // Open Frameworks app:
     
     ofSetupOpenGL(DRAW_WINDOW_WIDTH, DRAW_WINDOW_HEIGHT, OF_WINDOW);			// <-------- setup the GL context
     
