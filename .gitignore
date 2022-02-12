@@ -1,3 +1,9 @@
 bin/
 obj/
 .idea/
+
+# Xcode generated files
+Project.xcconfig
+openFrameworks-Info.plist
+raytracer.xcodeproj/
+
