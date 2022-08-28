@@ -9,7 +9,7 @@
 
 #include <stdio.h>
 
-#include "gtest.h"
+#include "../ext/gtest/gtest.h"
 
 int rt::test::main(int argc, char **argv) {
   printf("Running main() from rt_tests.cpp\n");

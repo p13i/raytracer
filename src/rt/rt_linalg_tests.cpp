@@ -7,7 +7,7 @@
 
 #include "rt_linalg.hpp"
 
-#include "gtest.h"
+#include "../ext/gtest/gtest.h"
 
 using namespace rt::linalg;
 
