@@ -1,0 +1,3 @@
+[submodule "src/ext/of"]
+	path = src/ext/of
+	url = https://github.com/openframeworks/openframeworks

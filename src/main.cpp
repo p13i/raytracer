@@ -2,13 +2,9 @@
 // #include "ofApp.h"
 
 #include "rt/rt_raytracer.hpp"
-#include "rt/rt_tests.hpp"
 
 //========================================================================
 int main(int argc, char *argv[]){
-    
-    // Run tests first
-    rt::test::main(argc, argv);
     
     // Open Frameworks app:
     
