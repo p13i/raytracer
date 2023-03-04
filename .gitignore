@@ -7,3 +7,10 @@ Project.xcconfig
 openFrameworks-Info.plist
 raytracer.xcodeproj/
 
+# Visual Studio
+.vs/
+*.sln
+*.vcxproj*
+
+# Icon
+icon.aps

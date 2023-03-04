@@ -4,6 +4,7 @@
 #include "ofMain.h"
 
 #include "rt_raytracer.hpp"
+#include "rt_random.hpp"
 
 #include <string>
 #include <ctime>
@@ -30,14 +31,7 @@ using namespace rt;
 
 #include <random>
 
-auto sinusodal = [](float freqencyHz, float phase) {
-    return sin(freqencyHz * 2 * PI * phase);
-};
-
-auto randF = []() {
-    return std::rand() / (float) RAND_MAX;
-};
-
+#include "rt_math.hpp"
 
 class PureTone {
 
@@ -49,7 +43,7 @@ public:
         buffer.assign(length, 0.f);
         for (size_t i = 0; i < length; i++) {
             float phase = (i / (float) length);
-            buffer[i] = sinusodal(mFrequency, phase);
+            buffer[i] = rt::math::sinusodal(mFrequency, phase);
         }
         return buffer;
     }
@@ -66,7 +60,7 @@ private:
 public:
     rtOfColorManager(unsigned int count) {
         for (size_t i = 0; i < count; i++) {
-            colors.push_back(ofColor(randF(), randF(), randF()));
+            colors.push_back(ofColor(rt::random::randF(), rt::random::randF(), rt::random::randF()));
         }
     }
     

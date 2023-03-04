@@ -2,6 +2,7 @@
 
 #include "rt_settings.hpp"
 #include "rt_str.hpp"
+#include "rt_math.hpp"
 
 #include <algorithm>
 #include <cstdio>
@@ -73,7 +74,10 @@ void ofApp::setup() {
     settings.numOutputChannels = APP_AUDIO_NUM_CHANNELS;
     settings.sampleRate = APP_AUDIO_SAMPLE_RATE;
     settings.setOutListener(this);
-    settings.setApi(ofSoundDevice::PULSE);
+
+#ifdef _WIN32
+    settings.setApi(ofSoundDevice::MS_DS);
+#endif // _WIN32
 
     ofSoundStreamSetup(settings);
 }
@@ -89,13 +93,13 @@ static void extracted(ofApp &object, vector<float> &mSoundBuffer, unsigned int &
         float mixRatio = 1 / (float) nTones;
         
         float value = 0;
-        value += mixRatio * sinusodal(659.2551f, phase); // E4
-        value += mixRatio * sinusodal(440.0000f, phase); // A4
-        value += mixRatio * sinusodal(554.3653f, phase); // E4
-        value += mixRatio * sinusodal(391.9954f, phase); // G3
-        value += mixRatio * sinusodal(164.8138f, phase); // E3
-        value += mixRatio * sinusodal(130.8128f, phase); // C3
-        value += mixRatio * sinusodal(055.0000f, phase); // A1
+        value += mixRatio * rt::math::sinusodal(659.2551f, phase); // E4
+        value += mixRatio * rt::math::sinusodal(440.0000f, phase); // A4
+        value += mixRatio * rt::math::sinusodal(554.3653f, phase); // E4
+        value += mixRatio * rt::math::sinusodal(391.9954f, phase); // G3
+        value += mixRatio * rt::math::sinusodal(164.8138f, phase); // E3
+        value += mixRatio * rt::math::sinusodal(130.8128f, phase); // C3
+        value += mixRatio * rt::math::sinusodal(055.0000f, phase); // A1
         
         // adjust into [0, 1]
         value += 1;
@@ -366,7 +370,7 @@ void ofApp::rtDraw(vector<Trace<Beam *> *> traces) {
         path.lineTo(a.dest.x, a.dest.y);
         path.lineTo(b.dest.x, b.dest.y);
         path.lineTo(b.origin.x, b.origin.y);
-        ofColor color = ofFloatColor(randF(), randF(), randF(), 0.5); // random
+        ofColor color = ofFloatColor(rt::random::randF(), rt::random::randF(), rt::random::randF(), 0.5); // random
         path.setFillColor(color);
         path.draw();
 

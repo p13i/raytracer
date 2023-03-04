@@ -8,6 +8,8 @@ namespace rt {
 
     namespace math {
 
+        float sinusodal(float freqencyHz, float phase);
+
         bool inrange(float a, float lower = 0., float upper = 1.);
 
     };
