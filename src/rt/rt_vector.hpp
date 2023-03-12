@@ -57,4 +57,8 @@ rt::Vector operator * (float scalar, rt::Vector vec);
 
 std::ostream& operator << (std::ostream& os, const rt::Vector& vec);
 
+bool operator == (const rt::Vector& first, const rt::Vector& second);
+
+bool operator != (const rt::Vector& first, const rt::Vector& second);
+
 #endif /* rt_vector_hpp */

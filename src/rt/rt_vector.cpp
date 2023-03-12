@@ -19,3 +19,12 @@ ostream& operator << (ostream& os, const Vector& vec)
 {
     return os << "Vector(" << vec.origin << ", " << vec.dest << ')';
 }
+
+
+bool operator == (const Vector& first, const Vector& second) {
+    return first.origin == second.origin && first.dest == second.dest;
+}
+
+bool operator != (const Vector& first, const Vector& second) {
+    return !(first == second);
+}

@@ -91,7 +91,6 @@ std::vector<Trace<Beam*>*> RayTracer::beamCast(Ray start, float spreadRadians, u
     
     // Brute force algorithm:
     // 1. Get all unique points in the mGeometry
-    
     vector<Point> allPoints;
     for (LineSegment edge : mEnvironment.mGeometry.edges) {
         allPoints.push_back(edge.a);
@@ -110,12 +109,9 @@ std::vector<Trace<Beam*>*> RayTracer::beamCast(Ray start, float spreadRadians, u
         bool intersection = mEnvironment.mGeometry.intersection(intersectionStart, intersectionPoint, intersectedEdge);
 
         if (intersection) {
-            bool intersectA = intersectionPoint == intersectedEdge.a;
-            bool intersectB = intersectionPoint == intersectedEdge.b;
+            bool intersectA = (intersectionPoint == intersectedEdge.a) && (intersectedEdge.a == point);
+            bool intersectB = (intersectionPoint == intersectedEdge.b) && (intersectedEdge.b == point);
 
-            intersectA &= intersectedEdge.a == point;
-            intersectB &= intersectedEdge.b == point;
-            
             if (intersectA || intersectB) {
                 intersection = false;
             }

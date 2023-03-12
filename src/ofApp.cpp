@@ -62,64 +62,61 @@ void ofApp::setup() {
     Environment env{mGeometriesList[0]};
     mRayTracer = RayTracer{env};
 
+#if APP_ENABLE_AUDIO
     // Audio
     mSoundBuffer.assign(APP_AUDIO_RATE, 0.f);
 
-
+    // Set up openframeworks audio
     ofSoundStreamSettings settings;
-
     settings.bufferSize = APP_AUDIO_BUFFER_SIZE;
     settings.numBuffers = APP_AUDIO_N_NUM_BUFFERS;
     settings.numInputChannels = APP_AUDIO_NUM_INPUTS;
     settings.numOutputChannels = APP_AUDIO_NUM_CHANNELS;
     settings.sampleRate = APP_AUDIO_SAMPLE_RATE;
     settings.setOutListener(this);
-
 #ifdef _WIN32
     settings.setApi(ofSoundDevice::MS_DS);
 #endif // _WIN32
-
     ofSoundStreamSetup(settings);
-}
-
-static void extracted(ofApp &object, vector<float> &mSoundBuffer, unsigned int &mSoundBufferWriteIndex, size_t numSamplesForUpdate) {
-    for (size_t i = 0; i < numSamplesForUpdate; i++) {
-        
-        float phase = (float) object.mSoundBufferWriteIndex / (float) APP_AUDIO_RATE;
-        
-        assert(0.f <= phase && phase <= 1.f);
-        
-        int nTones = 7;
-        float mixRatio = 1 / (float) nTones;
-        
-        float value = 0;
-        value += mixRatio * rt::math::sinusodal(659.2551f, phase); // E4
-        value += mixRatio * rt::math::sinusodal(440.0000f, phase); // A4
-        value += mixRatio * rt::math::sinusodal(554.3653f, phase); // E4
-        value += mixRatio * rt::math::sinusodal(391.9954f, phase); // G3
-        value += mixRatio * rt::math::sinusodal(164.8138f, phase); // E3
-        value += mixRatio * rt::math::sinusodal(130.8128f, phase); // C3
-        value += mixRatio * rt::math::sinusodal(055.0000f, phase); // A1
-        
-        // adjust into [0, 1]
-        value += 1;
-        value /= 2;
-        
-        object.mMutex.lock();
-        {
-            object.mSoundBuffer[object.mSoundBufferWriteIndex] = value;
-            object.mSoundBufferWriteIndex = (object.mSoundBufferWriteIndex + 1) % APP_AUDIO_RATE;
-        }
-        object.mMutex.unlock();
-    }
+#endif // APP_ENABLE_AUDIO
 }
 
 //--------------------------------------------------------------
 void ofApp::update() {
 
+#if APP_ENABLE_AUDIO
     // Write to the audio buffer
     size_t numSamplesForUpdate = APP_AUDIO_SAMPLE_RATE / APP_FRAME_RATE;
-    extracted(*this, mSoundBuffer, mSoundBufferWriteIndex, numSamplesForUpdate);
+    for (size_t i = 0; i < numSamplesForUpdate; i++) {
+
+        float phase = (float)mSoundBufferWriteIndex / (float)APP_AUDIO_RATE;
+
+        assert(0.f <= phase && phase <= 1.f);
+
+        int nTones = 7;
+
+        float value = 0;
+        value += rt::math::sinusodal(659.2551f, phase); // E4
+        value += rt::math::sinusodal(440.0000f, phase); // A4
+        value += rt::math::sinusodal(554.3653f, phase); // E4
+        value += rt::math::sinusodal(391.9954f, phase); // G3
+        value += rt::math::sinusodal(164.8138f, phase); // E3
+        value += rt::math::sinusodal(130.8128f, phase); // C3
+        value += rt::math::sinusodal(055.0000f, phase); // A1
+
+        // adjust into [0, 1]
+        value /= nTones;
+        value += 1;
+        value /= 2;
+
+        mMutex.lock();
+        {
+            mSoundBuffer[mSoundBufferWriteIndex] = value;
+            mSoundBufferWriteIndex = (mSoundBufferWriteIndex + 1) % APP_AUDIO_RATE;
+        }
+        mMutex.unlock();
+    }
+#endif // APP_ENABLE_AUDIO
 
 }
 
@@ -306,6 +303,7 @@ void ofApp::dragEvent(ofDragInfo dragInfo) {
 
 }
 
+#if APP_ENABLE_AUDIO
 //--------------------------------------------------------------
 void ofApp::audioOut(ofSoundBuffer &soundBuffer) {
     mMutex.lock();
@@ -322,6 +320,7 @@ void ofApp::audioOut(ofSoundBuffer &soundBuffer) {
     }
     mMutex.unlock();
 }
+#endif // APP_ENABLE_AUDIO
 
 void ofApp::rtDraw(vector<Trace<Vector> *> traces) {
     ofSetColor(ofFloatColor(1, 1, 1, 0.5));  // clear white
@@ -378,7 +377,7 @@ void ofApp::rtDraw(vector<Trace<Beam *> *> traces) {
 }
 
 void ofApp::rtDraw(Environment env) {
-    for (LineSegment edge: env.mGeometry.edges) {
+    for (const LineSegment& edge: env.mGeometry.edges) {
         ofSetColor(ofFloatColor(1, 0, 0));
 
         ofSetLineWidth(4);

@@ -21,6 +21,9 @@ using namespace rt;
 #define DRAW_WINDOW_HEIGHT DRAW_WINDOW_WIDTH
 #define DRAW_GRID_SPACING_PX 50
 
+// Configurations for the app front-end
+
+#define APP_ENABLE_AUDIO false
 #define APP_FRAME_RATE 24
 #define APP_AUDIO_RATE 44100
 #define APP_AUDIO_NUM_CHANNELS 2
@@ -148,18 +151,22 @@ public:
     void windowResized(int w, int h);
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
+
+#if APP_ENABLE_AUDIO
     void audioOut( ofSoundBuffer& soundBuffer );
-    void audioOutCallback(ofSoundBuffer& soundbuffer);
-    
+#endif // APP_ENABLE_AUDIO    
+
     void rtDraw(vector<Trace<Vector>*> traces);
     void rtDraw(Ray startingRay, ofVec2f lookingAt);
     void rtDraw(vector<Trace<Beam*>*> beams);
     void rtDraw(Environment env);
     void rtDrawMetadata();
     
+#if APP_ENABLE_AUDIO
     vector<float> mSoundBuffer;
     unsigned int mSoundBufferReadIndex = 0;
     unsigned int mSoundBufferWriteIndex = 0;
+#endif // APP_ENABLE_AUDIO
 };
 
 #endif // ofApp_h
