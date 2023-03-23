@@ -20,3 +20,12 @@ float Ray::radians() const {
 std::ostream& operator << (std::ostream& os, const rt::Ray& ray) {
     return os << "Ray(origin=" << ray.origin << ", direction=" << ray.direction << ")";
 };
+bool operator == (const rt::Ray& first, const rt::Ray& second)
+{
+    return first.origin == second.origin && first.direction == second.direction;
+}
+
+bool operator != (const rt::Ray& first, const rt::Ray& second)
+{
+    return !(first == second);
+}

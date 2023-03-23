@@ -13,7 +13,7 @@ int main(int argc, char *argv[]){
         return test_result;
     }
 
-#define APP_ENABLE true
+#define APP_ENABLE false
 #if APP_ENABLE
     // Open Frameworks app:
     ofSetupOpenGL(DRAW_WINDOW_WIDTH, DRAW_WINDOW_HEIGHT, OF_WINDOW);

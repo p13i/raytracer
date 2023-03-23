@@ -10,12 +10,13 @@
 #include <cstdio>
 #include <vector>
 
-using namespace std;
-
 namespace rt {
+    
+using Polygon = std::vector<Point>;
+    
 namespace geo {
 
-
+    
 ////////////////////////////////////////////////////////////
 // Performs a standard dot product.
 float dot(const Point& a, const Point& b);
@@ -41,7 +42,7 @@ Ray reflect(Vector forwardTrace, LineSegment intersectedEdge);
 Vector normal(LineSegment ls);
 
 ////////////////////////////////////////////////////////////
-// The Euclidian, straight line distance between two points.
+// The Euclidean, straight line distance between two points.
 float dist(Point a, Point b);
 
 ////////////////////////////////////////////////////////////
@@ -49,7 +50,17 @@ float dist(Point a, Point b);
 // following the positive direction on a unit circle.
 Ray rotate(Ray r, float offsetRadians);
 
-}  // namespace geo
-} // namespace rt
+    struct gptRay {
+        Point origin;
+        Point direction;
+    };
+    bool gpt_intersects(const geo::gptRay &ray1, const geo::gptRay &ray2,
+                    Point &intersection);
+////////////////////////////////////////////////////////////
+/// Finds the intersection point of two rays.
+bool intersection_of_rays(Ray a, Ray b, Point& intersection_point);
+
+}   // namespace geo
+}   // namespace rt
 
 #endif // rt_geo_hpp

@@ -82,7 +82,7 @@ std::vector<rt::Trace<Vector>*> rt::RayTracer::cast(rt::Ray start, float spreadR
 
 
 std::vector<Trace<Beam*>*> RayTracer::beamCast(Ray start, float spreadRadians, unsigned int depth) {
-    
+    // Recursion base case
     if (depth == 0) {
         return {};
     }
@@ -148,24 +148,24 @@ std::vector<Trace<Beam*>*> RayTracer::beamCast(Ray start, float spreadRadians, u
     
     // 4. Collect all line segments into their own Beams
     vector<Beam*> beams;
-    int nPoints = visiblePoints.size();
-    for (int i = 0; i < nPoints - 1; i++) {
-        int i1 = i;
-        int i2 = i + 1;
+    size_t num_points = visiblePoints.size();
+    for (size_t i = 0; i < num_points - 1; i++) {
+        size_t i1 = i;
+        size_t i2 = i + 1;
         
         Point p1 = visiblePoints[i1];
         Point p2 = visiblePoints[i2];
         
-        Vector boundA(o, p1);
-        Vector boundB(o, p2);
+        Vector bound_a(o, p1);
+        Vector bound_b(o, p2);
         
-        Beam *beam = new Beam(boundA, boundB);
+        Beam *beam = new Beam(bound_a, bound_b);
         
         beams.push_back(beam);
     }
     
-    if (nPoints > 2) {
-        Point p1 = visiblePoints[nPoints - 1];
+    if (num_points > 2) {
+        Point p1 = visiblePoints[num_points - 1];
         Point p2 = visiblePoints[0];
         
         Ray r1(o, p1);
@@ -240,7 +240,7 @@ std::vector<Trace<Beam*>*> RayTracer::beamCast(Ray start, float spreadRadians, u
         }
     }
     
-    // Transform the beams to traces and perform the recurison!!
+    // Transform the beams to traces and perform the recursion!!
     
     vector<Trace<Beam*>*> beamTraces;
     for (Beam* beam : beams) {
@@ -251,4 +251,18 @@ std::vector<Trace<Beam*>*> RayTracer::beamCast(Ray start, float spreadRadians, u
     }
     
     return beamTraces;
+}
+
+////////////////////////////////////////////////////////////
+/// 
+std::vector<Trace<Beam*>*> RayTracer::beamCast2(Ray start, float spreadRadians, unsigned int depth) {
+    // Step 1: Within the unbounded beam B, find all line
+    // segments that are within the beam's bounds
+    // (B_l, B_r).
+
+    Point b_o = start.origin;
+    Ray b_l = rt::geo::rotate(start, -1 * spreadRadians / 2.f);
+    Ray b_r = rt::geo::rotate(start, spreadRadians / 2.f);
+    
+    return {};
 }

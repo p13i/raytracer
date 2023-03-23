@@ -93,8 +93,12 @@ Ray geo::reflect(Vector forwardTrace, LineSegment intersectedEdge) {
 }
 
 rt::Ray rt::geo::rotate(rt::Ray r, float offsetRadians) {
-//    auto dir = r.direction.unit().dest;
-//    auto newX = dir.x - cos(offsetRadians),
-//         newY = dir.y - sin(offsetRadians);
     return Ray(r.origin, r.radians() + offsetRadians);
+}
+
+bool rt::geo::intersection_of_rays(Ray ray1, Ray ray2, Point& intersection_point) {
+    // TODO remove hack, use Cramer's method
+    LineSegment line1{ray1(0), ray1(1000)};
+    LineSegment line2{ray2(0), ray2(1000)};
+    return intersection(line1, line2, intersection_point);
 }

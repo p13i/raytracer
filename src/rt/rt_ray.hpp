@@ -31,4 +31,8 @@ namespace rt {
 
 std::ostream &operator<<(std::ostream &os, const rt::Ray &ray);
 
+bool operator == (const rt::Ray& first, const rt::Ray& second);
+
+bool operator != (const rt::Ray& first, const rt::Ray& second);
+
 #endif /* rt_ray_hpp */
