@@ -18,6 +18,16 @@ using namespace std;
 using namespace rt;
 
 bool rt::geo::intersection(LineSegment j, LineSegment k, Point& intersectionPoint) {
+    // First check if the line segments intersect at the endpoints
+    if (j.a == k.a || j.a == k.b) {
+        intersectionPoint = j.a;
+        return true;
+    } else if (j.b == k.a || j.b == k.b) {
+        intersectionPoint = j.b;
+        return true;
+    }
+    
+    // Run the intersection algorithm
     float x1 = j.a.x, y1 = j.a.y;
     float x2 = j.b.x, y2 = j.b.y;
     float x3 = k.a.x, y3 = k.a.y;

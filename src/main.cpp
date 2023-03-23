@@ -8,7 +8,10 @@
 int main(int argc, char *argv[]){
     
     // Run tests first
-    rt::test::main(argc, argv);
+    const int test_result = rt::test::main(argc, argv);
+    if (test_result != 0) {
+        return test_result;
+    }
 
 #define APP_ENABLE true
 #if APP_ENABLE

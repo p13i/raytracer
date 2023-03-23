@@ -13,21 +13,43 @@
 using namespace std;
 
 namespace rt {
-    namespace geo {
+namespace geo {
 
-        float dot(const Point &a, const Point &b);
 
-        bool intersection(LineSegment j, LineSegment k, Point &intersectionPoint);
+////////////////////////////////////////////////////////////
+// Performs a standard dot product.
+float dot(const Point& a, const Point& b);
 
-        Ray reflect(Vector forwardTrace, LineSegment intersectedEdge);
+////////////////////////////////////////////////////////////
+// Indicates if the two line segments given intersect. If
+// the lines intersect solely on an endpoint, it is
+// considered an intersection. If the return value is true,
+// the intersectionPoint passed in will have a value.
+bool intersection(LineSegment j, LineSegment k, Point& intersectionPoint);
 
-        Vector normal(LineSegment ls);
+////////////////////////////////////////////////////////////
+// Reflects the given vector about the intersected edge as
+// in this drawing:
+//	forwardTrace -> \    / <- return value
+//	                 \  /
+//				      \/
+//                 ------- <- intersectedEdge
+Ray reflect(Vector forwardTrace, LineSegment intersectedEdge);
 
-        float dist(Point a, Point b);
+////////////////////////////////////////////////////////////
+// Standard normal direction vector against a line segment.
+Vector normal(LineSegment ls);
 
-        Ray rotate(Ray r, float offsetRadians);
+////////////////////////////////////////////////////////////
+// The Euclidian, straight line distance between two points.
+float dist(Point a, Point b);
 
-    }
-}
+////////////////////////////////////////////////////////////
+// Rotates a ray by a given offset (in radians), clockwise
+// following the positive direction on a unit circle.
+Ray rotate(Ray r, float offsetRadians);
+
+}  // namespace geo
+} // namespace rt
 
 #endif // rt_geo_hpp
