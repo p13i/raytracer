@@ -60,7 +60,7 @@ std::vector<rt::Trace<Vector>*> rt::RayTracer::cast(rt::Ray start, float spreadR
     float startRadians = start.radians();
     
     float radianOffset = -(spreadRadians / 2.f);
-    for (int i = 0; i < spreadCount; i++) {
+    for (unsigned int i = 0; i < spreadCount; i++) {
         
         radianOffset += (spreadRadians / (float) spreadCount);
 
@@ -253,6 +253,80 @@ std::vector<Trace<Beam*>*> RayTracer::beamCast(Ray start, float spreadRadians, u
     return beamTraces;
 }
 
+ProcessUnboundBeamsResult rt::ProcessUnboundBeam(const UnboundBeam& u_beam, const std::vector<LineSegment>& env_edges) {
+    
+    // Unpack some local variables
+    Point b_o = Origin(u_beam);
+    Ray b_l = u_beam.bound_a_;
+    Ray b_r = u_beam.bound_b_;
+
+    if (b_l.radians() < b_r.radians()) {
+        Ray temp = b_l;
+        b_l = b_r;
+        b_r = temp;
+    }
+    
+    // Find line segments. Place into w (for :within")
+    std::vector<LineSegment> lines_within_u_beam;
+    for (const LineSegment& line_segment : env_edges) {
+        if (Contains(u_beam, line_segment)) {
+            lines_within_u_beam.push_back(line_segment);
+        }
+    }
+
+    // Step 2: Order w by distance from B_o and select the
+    // closest line segment as L_closest
+    sort(lines_within_u_beam.begin(), lines_within_u_beam.end(), [b_o](const LineSegment& l_a, const LineSegment& l_b) -> bool {
+        float da = min(Vector(b_o, l_a.a).magnitude(), Vector(b_o, l_a.b).magnitude());
+        float db = min(Vector(b_o, l_b.a).magnitude(), Vector(b_o, l_b.b).magnitude());
+        return da < db;
+    });
+
+    LineSegment L_closest = lines_within_u_beam.front();
+
+    // Step 3: Trace line segments (actually Vectors) from B_o
+    // to the endpoints of L_closest, a_l and a_r, S_1 and S_2
+    Vector s_o_a{b_o, L_closest.a};
+    Vector s_o_b{b_o, L_closest.b};
+
+    if (Ray(s_o_a).radians() < Ray(s_o_b).radians()) {
+        Vector temp = s_o_b;
+        s_o_b = s_o_a;
+        s_o_a = temp;
+    }
+    
+    // Step 4: Form a bounded beam from b_o to L_closest(=a).
+    // Put this beam into a new list C (completed beams)
+    Beam b_beam{s_o_a, s_o_b};
+    std::vector<Beam> C{b_beam};
+    
+    // Step 5: Remove L_closest from W_ordered
+    // lines_within_u_beam.erase(lines_within_u_beam.begin());
+    // Done in caller by L_closest_processed being removed
+    
+    // Step 6: Construct shadow beams: S_a_l is bounded by B_l
+    // and a ray of (B_l spanning to A_l) to infinity, and S_b_r
+    // the right side of S_2. Repeat Steps 2 to 6 until no non-
+    // nil shadows are formed. C may have more beams now.
+    UnboundBeam S_a_l{b_l, s_o_a};
+    UnboundBeam S_b_r{b_r, s_o_b};
+
+    // Return result
+    ProcessUnboundBeamsResult result;
+    result.L_closest_processed = L_closest;
+    result.C = C;
+    result.next_u_beams = {};
+    if (S_a_l.bound_a_ != S_a_l.bound_b_)
+    {
+        result.next_u_beams.push_back(S_a_l);
+    }
+    if (S_b_r.bound_a_ != S_b_r.bound_b_)
+    {
+        result.next_u_beams.push_back(S_b_r);
+    }
+    
+    return result;
+}
 ////////////////////////////////////////////////////////////
 /// 
 std::vector<Trace<Beam*>*> RayTracer::beamCast2(Ray start, float spreadRadians, unsigned int depth) {
@@ -263,6 +337,29 @@ std::vector<Trace<Beam*>*> RayTracer::beamCast2(Ray start, float spreadRadians, 
     Point b_o = start.origin;
     Ray b_l = rt::geo::rotate(start, -1 * spreadRadians / 2.f);
     Ray b_r = rt::geo::rotate(start, spreadRadians / 2.f);
+    UnboundBeam u_beam{b_l, b_r};
+    
+    std::vector<Beam> C; // completed beams
+    std::vector<LineSegment> env_edges = mEnvironment.mGeometry.edges;
+    ProcessUnboundBeamsResult result = ProcessUnboundBeam(u_beam, env_edges);
+
+    for (const Beam& beam : result.C) {
+        C.push_back(beam);
+    } 
+    
+    // Repeat Steps 2 to 6 goes here
+    // Ignore the edge from the result
+    std::vector<LineSegment> edges_minus_last_closest;
+    std::copy_if(env_edges.begin(), env_edges.end(),
+        std::back_inserter(edges_minus_last_closest),[result](LineSegment line_seg) {
+            return line_seg != result.L_closest_processed;
+        });
+    for (const UnboundBeam& next_u_beam : result.next_u_beams) {
+        ProcessUnboundBeamsResult next_result = ProcessUnboundBeam(next_u_beam, edges_minus_last_closest);
+    }
+    
+    // Step 7: Reflect each beam in C and repeat Steps 1 to 7
+    // until a max depth.
     
     return {};
 }

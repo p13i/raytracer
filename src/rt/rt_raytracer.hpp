@@ -32,6 +32,16 @@ public:
     vector<Trace<Beam*>*> beamCast(Ray start, float spreadRadians, unsigned int depth = 1);
     vector<Trace<Beam*>*> beamCast2(Ray start, float spreadRadians, unsigned int depth = 1);
 };
+
+// Helper functions ////////////////////////////////////////
+struct ProcessUnboundBeamsResult {
+    // The edge of that formed these beams
+    LineSegment L_closest_processed;
+    std::vector<Beam> C;    // completed beams
+    std::vector<UnboundBeam> next_u_beams;  // resulting from function
+};
+
+ProcessUnboundBeamsResult ProcessUnboundBeam(const UnboundBeam& u_beam, const std::vector<LineSegment>& env_edges);
 }   // namespace rt
 
 

@@ -21,6 +21,8 @@ namespace rt {
 
         Ray(Point origin, Vector direction) : origin(origin), direction(direction) {}
 
+        Ray(Vector vector) : Ray(vector.origin, vector.dest) {}
+
         Point operator()(float time) const;
 
         float radians() const;

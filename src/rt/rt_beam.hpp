@@ -9,7 +9,7 @@ namespace rt {
 ////////////////////////////////////////////////////////////
 /// Represents a beam with finite bounds.
 struct Beam {
-  const Vector mBoundA, mBoundB;
+  Vector mBoundA, mBoundB;
 
   Beam(const Vector mBoundA, const Vector mBoundB)
       : mBoundA(mBoundA), mBoundB(mBoundB) {}
@@ -17,19 +17,29 @@ struct Beam {
 
 ////////////////////////////////////////////////////////////
 /// Represents a beam with bounds that extend to infinity.
-class UnboundBeam {
-public:
-  const Ray bound_a_, bound_b_;
-
-  UnboundBeam(const Ray bound_a, const Ray bound_b)
+struct UnboundBeam {
+  Ray bound_a_, bound_b_;
+    UnboundBeam(): UnboundBeam({},{}) {}
+  UnboundBeam(Ray bound_a, Ray bound_b)
       : bound_a_(bound_a), bound_b_(bound_b) {}
-  Point Origin() const;
-  bool Contains(LineSegment line_segment) const;
 };
+
+    bool Contains(rt::UnboundBeam u_beam, rt::LineSegment line_segment);
+
+    rt::Point Origin(rt::UnboundBeam u_beam);
+
 } // namespace rt
+
+std::ostream &operator<<(std::ostream &os, const rt::UnboundBeam &u_beam);
+
+std::ostream &operator<<(std::ostream &os, const rt::Beam &beam);
 
 bool operator==(const rt::Beam &first, const rt::Beam &second);
 
 bool operator!=(const rt::Beam &first, const rt::Beam &second);
+
+bool operator==(const rt::UnboundBeam &first, const rt::UnboundBeam &second);
+
+bool operator!=(const rt::UnboundBeam &first, const rt::UnboundBeam &second);
 
 #endif // RT_BEAM_H

@@ -12,11 +12,13 @@ struct LineSegment {
     
     LineSegment(Point a, Point b): a(a), b(b) { }
 
-    bool operator == (LineSegment other);
+    bool operator == (LineSegment other) const;
     
-    bool operator != (LineSegment other);
+    bool operator != (LineSegment other) const;
 };
 
+// bool operator == (const LineSegment& this_, const LineSegment& that);
+    
 }
 
 #endif // rt_linesegment_hpp

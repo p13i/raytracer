@@ -8,10 +8,10 @@ std::ostream& operator << (std::ostream& os, const rt::LineSegment& edge)
     return os;
 }
 
-bool rt::LineSegment::operator == (LineSegment other) {
+bool rt::LineSegment::operator == (LineSegment other) const {
     return this->a == other.a && this->b == other.b;
 }
 
-bool rt::LineSegment::operator != (LineSegment other) {
+bool rt::LineSegment::operator != (LineSegment other) const {
     return !(*this == other);
 }

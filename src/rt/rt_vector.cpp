@@ -17,7 +17,7 @@ Vector operator * (float scalar, Vector vec) {
 
 ostream& operator << (ostream& os, const Vector& vec)
 {
-    return os << "Vector(" << vec.origin << ", " << vec.dest << ')';
+    return os << "Vector(origin=" << vec.origin << ", dest=" << vec.dest << ')';
 }
 
 
