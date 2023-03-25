@@ -7,16 +7,16 @@ namespace rt {
 
 template <class T>
 struct Trace {
-    T data;
-    float luminance;
-    
-    bool isTerminal;
-    struct Trace<T> *next;
-    
-    Trace(T data, float luminance, bool isTerminal = false, Trace *next = nullptr):
-        data(data), luminance(luminance), isTerminal(isTerminal), next(next) { }
+  T data;
+  float luminance;
+
+  bool isTerminal;
+  struct Trace<T> *next;
+
+  Trace(T data, float luminance, bool isTerminal = false, Trace *next = nullptr)
+      : data(data), luminance(luminance), isTerminal(isTerminal), next(next) {}
 };
 
-}
+}  // namespace rt
 
 #endif /* rt_trace_hpp */

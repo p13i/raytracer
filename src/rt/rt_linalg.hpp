@@ -8,22 +8,23 @@
 #ifndef rt_linalg_hpp
 #define rt_linalg_hpp
 
-#include "rt_vector.hpp"
 #include "rt_settings.hpp"
+#include "rt_vector.hpp"
 
-
-namespace rt { namespace linalg {
+namespace rt {
+namespace linalg {
 
 // | a b |
 // | c d |
 struct Matrix2x2 {
-    float a, b, c, d;
-    
-    Matrix2x2(float a, float b, float c, float d): a(a), b(b), c(c), d(d) { }
+  float a, b, c, d;
 
-    float determinant() const;
+  Matrix2x2(float a, float b, float c, float d) : a(a), b(b), c(c), d(d) {}
+
+  float determinant() const;
 };
 
-} }
+}  // namespace linalg
+}  // namespace rt
 
 #endif /* rt_linalg_hpp */

@@ -16,6 +16,6 @@ namespace test {
 int main(int argc, char** argv);
 
 }
-};
+};  // namespace rt
 
 #endif /* rt_tests_hpp */

@@ -1,22 +1,20 @@
 #ifndef rt_geo_hpp
 #define rt_geo_hpp
 
-#include "rt_point.hpp"
-#include "rt_linesegment.hpp"
-#include "rt_point.hpp"
-#include "rt_vector.hpp"
-#include "rt_ray.hpp"
-
 #include <cstdio>
 #include <vector>
 
+#include "rt_linesegment.hpp"
+#include "rt_point.hpp"
+#include "rt_ray.hpp"
+#include "rt_vector.hpp"
+
 namespace rt {
-    
+
 using Polygon = std::vector<Point>;
-    
+
 namespace geo {
 
-    
 ////////////////////////////////////////////////////////////
 // Performs a standard dot product.
 float dot(const Point& a, const Point& b);
@@ -50,12 +48,12 @@ float dist(Point a, Point b);
 // following the positive direction on a unit circle.
 Ray rotate(Ray r, float offsetRadians);
 
-    struct gptRay {
-        Point origin;
-        Point direction;
-    };
-    bool gpt_intersects(const geo::gptRay &ray1, const geo::gptRay &ray2,
-                    Point &intersection);
+struct gptRay {
+  Point origin;
+  Point direction;
+};
+bool gpt_intersects(const gptRay& ray1, const gptRay& ray2,
+                    Point& intersection);
 ////////////////////////////////////////////////////////////
 /// Finds the intersection point of two rays.
 bool intersection_of_rays(Ray a, Ray b, Point& intersection_point);
@@ -64,7 +62,7 @@ bool intersection_of_rays(Ray a, Ray b, Point& intersection_point);
 /// Determines if a point is between two rays
 bool point_between_rays(const Ray& a, const Ray& b, const Point& p);
 
-}   // namespace geo
-}   // namespace rt
+}  // namespace geo
+}  // namespace rt
 
-#endif // rt_geo_hpp
+#endif  // rt_geo_hpp

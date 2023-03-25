@@ -3,5 +3,5 @@
 #include <random>
 
 float rt::random::randF() {
-	return std::rand() / (float)RAND_MAX;
+  return std::rand() / static_cast<float>(RAND_MAX);
 };

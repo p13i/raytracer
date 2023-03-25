@@ -4,9 +4,9 @@
 #include <random>
 
 namespace rt {
-	namespace random {
-		float randF();
-	}
+namespace random {
+float randF();
 }
+}  // namespace rt
 
-#endif // rt_random_hpp
+#endif  // rt_random_hpp

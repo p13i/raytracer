@@ -6,19 +6,19 @@
 namespace rt {
 
 struct LineSegment {
-    Point a, b;
-    
-    LineSegment(): LineSegment(rt::Point(), rt::Point()) { }
-    
-    LineSegment(Point a, Point b): a(a), b(b) { }
+  Point a, b;
 
-    bool operator == (LineSegment other) const;
-    
-    bool operator != (LineSegment other) const;
+  LineSegment() : LineSegment(Point(), Point()) {}
+
+  LineSegment(Point a, Point b) : a(a), b(b) {}
+
+  bool operator==(LineSegment other) const;
+
+  bool operator!=(LineSegment other) const;
 };
 
 // bool operator == (const LineSegment& this_, const LineSegment& that);
-    
-}
 
-#endif // rt_linesegment_hpp
+}  // namespace rt
+
+#endif  // rt_linesegment_hpp
