@@ -7,6 +7,7 @@
 #include <string>
 #include <tuple>
 
+#include "app_settings.hpp"
 #include "ofMain.h"
 #include "rt_random.hpp"
 #include "rt_raytracer.hpp"
@@ -19,17 +20,6 @@ using namespace rt;
 #define DRAW_WINDOW_WIDTH 800
 #define DRAW_WINDOW_HEIGHT DRAW_WINDOW_WIDTH
 #define DRAW_GRID_SPACING_PX 50
-
-// Configurations for the app front-end
-
-#define APP_ENABLE_AUDIO false
-#define APP_FRAME_RATE 24
-#define APP_AUDIO_RATE 44100
-#define APP_AUDIO_NUM_CHANNELS 2
-#define APP_AUDIO_NUM_INPUTS 0
-#define APP_AUDIO_SAMPLE_RATE APP_AUDIO_RATE
-#define APP_AUDIO_BUFFER_SIZE 256
-#define APP_AUDIO_N_NUM_BUFFERS 4
 
 #include <random>
 

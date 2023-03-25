@@ -12,7 +12,6 @@
 using namespace std;
 using namespace rt;
 
-//--------------------------------------------------------------
 void ofApp::setup() {
   mAppSetupTime = time(nullptr);
   mEnvironmentChangedTime = mAppSetupTime;
