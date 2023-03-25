@@ -286,6 +286,9 @@ ProcessUnboundBeamsResult rt::ProcessUnboundBeam(const UnboundBeam& u_beam, cons
 
     // Step 3: Trace line segments (actually Vectors) from B_o
     // to the endpoints of L_closest, a_l and a_r, S_1 and S_2
+    // We need to find the point on L_closest that is within the
+    // bounds of the beam. E.g., if L_closest.a is outside of
+    // the beam, then we need to find the point inside
     Vector s_o_a{b_o, L_closest.a};
     Vector s_o_b{b_o, L_closest.b};
 

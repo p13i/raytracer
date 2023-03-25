@@ -1,40 +1,43 @@
-#ifndef rt_ray_hpp
-#define rt_ray_hpp
-
-#include <cmath>
-#include <iostream>
+#ifndef RT_RAY_HPP
+#define RT_RAY_HPP
 
 #include "rt_point.hpp"
 #include "rt_vector.hpp"
 
 namespace rt {
 
-    struct Ray {
-        Point origin;
-        Vector direction;
+// A unbounded vector
+struct Ray {
+  Point origin;
+  Vector direction;
 
-        Ray() : Ray({}, {}) {}
+  // Empty constructor
+  Ray() : Ray({}, {}) {}
 
-        Ray(Point origin, float radians) : Ray(origin, Vector{{cosf(radians), sinf(radians)}}) {}
+  // The direction in radians on the Unit Circle from a point
+  Ray(const Point origin, const float radians)
+      : Ray(origin, Vector{{cosf(radians), sinf(radians)}}) {}
 
-        Ray(Point origin, Point towards) : Ray(origin, Vector(towards - origin).unit()) {}
+  // A
+  Ray(const Point origin, const Point towards)
+      : Ray(origin, Vector(towards - origin).unit()) {}
 
-        Ray(Point origin, Vector direction) : origin(origin), direction(direction) {}
+  Ray(const Point origin, const Vector direction)
+      : origin(origin), direction(direction.unit()) {}
 
-        Ray(Vector vector) : Ray(vector.origin, vector.dest) {}
+  Ray(const Vector vector) : Ray(vector.origin, vector.dest) {}
 
-        Point operator()(float time) const;
+  Point operator()(float time) const;
 
-        float radians() const;
+  float radians() const;
+};
 
-    };
-
-}
+}  // namespace rt
 
 std::ostream &operator<<(std::ostream &os, const rt::Ray &ray);
 
-bool operator == (const rt::Ray& first, const rt::Ray& second);
+bool operator==(const rt::Ray &first, const rt::Ray &second);
 
-bool operator != (const rt::Ray& first, const rt::Ray& second);
+bool operator!=(const rt::Ray &first, const rt::Ray &second);
 
-#endif /* rt_ray_hpp */
+#endif  // RT_RAY_HPP

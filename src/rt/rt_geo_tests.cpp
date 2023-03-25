@@ -38,3 +38,10 @@ TEST(RayTest, IntersectingRays) {
     EXPECT_TRUE(intersection_of_rays(ray1, ray2, intersection));
     EXPECT_EQ(intersection, Point(0.5, 0.5));
 }
+
+TEST(point_between_rays, base) {
+    Ray a{{-1,-1},{}};
+    Ray b{{0,1},{1,0}};
+    Point p{0,0};
+    EXPECT_TRUE(point_between_rays(a,b,p));
+}

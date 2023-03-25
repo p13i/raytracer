@@ -45,7 +45,7 @@ std::ostream &operator <<(std::ostream &os, const std::vector<T> &v) {
 	for (const T& item : v) {
 		os << "    " << item << "," << std::endl;
 	}
-	os << "]";
+	os << "]" << std::endl;
 	return os;
 }
 
@@ -69,5 +69,18 @@ TEST_F(RayTracerTest, ProcessUnboundBeam_MoreThanHalfPiRadiansStartingBeamSpread
 	EXPECT_EQ(1, result.C.size());
 	EXPECT_TRUE(Beam({{0,0},{-100,-100}},{{0,0},{-100,100}}) == result.C.at(0));
 	EXPECT_EQ(2, result.next_u_beams.size()) << result.next_u_beams;
+	std::cout << "result.next_u_beams: " << result.next_u_beams;
+}
+
+TEST_F(RayTracerTest, ProcessUnboundBeam_NextUBeamsOnlyOnOneSide) {
+	Environment env = mEnvironments.at("first");
+
+	UnboundBeam u_beam{{{0,0},{-50,-30}}, {{0,0},{-50,70}}};
+	auto result = ProcessUnboundBeam(u_beam, env.mGeometry.edges);
+	EXPECT_EQ(LineSegment({-100,-100},{-100,100}), result.L_closest_processed);
+	EXPECT_EQ(1, result.C.size());
+	EXPECT_TRUE(Beam({{0,0},{-100,-100}},{{0,0},{-100,100}}) == result.C.at(0));
+	EXPECT_EQ(1, result.next_u_beams.size());
+	std::cout << "result.C: " << result.C;
 	std::cout << "result.next_u_beams: " << result.next_u_beams;
 }

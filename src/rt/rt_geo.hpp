@@ -60,6 +60,10 @@ Ray rotate(Ray r, float offsetRadians);
 /// Finds the intersection point of two rays.
 bool intersection_of_rays(Ray a, Ray b, Point& intersection_point);
 
+////////////////////////////////////////////////////////////
+/// Determines if a point is between two rays
+bool point_between_rays(const Ray& a, const Ray& b, const Point& p);
+
 }   // namespace geo
 }   // namespace rt
 

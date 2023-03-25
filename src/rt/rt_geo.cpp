@@ -7,12 +7,14 @@
 
 #include "rt_geo.hpp"
 
-#include "rt_settings.hpp"
-#include "rt_ray.hpp"
-#include "rt_linalg.hpp"
-#include "rt_vector.hpp"
-
 #include <cmath>
+
+#include "rt_beam.hpp"
+#include "rt_linalg.hpp"
+#include "rt_ray.hpp"
+#include "rt_settings.hpp"
+#include "rt_unbound_beam.hpp"
+#include "rt_vector.hpp"
 
 using namespace std;
 using namespace rt;
@@ -101,4 +103,28 @@ bool rt::geo::intersection_of_rays(Ray ray1, Ray ray2, Point& intersection_point
     LineSegment line1{ray1(0), ray1(1000)};
     LineSegment line2{ray2(0), ray2(1000)};
     return intersection(line1, line2, intersection_point);
+}
+
+bool rt::geo::point_between_rays(const Ray& a, const Ray& b, const Point& p) {
+    // Assign the left and right variables to the
+    // rays' orientations on a unit circle. A larger
+    // radians theta means the ray is more to the left,
+    // or counter-clockwise on the unit circle.
+    Ray left;
+    Ray right;
+    if (a.radians() < b.radians()) {
+        left = a;
+        right = b;
+    } else {
+        left = b;
+        right = a;
+    }
+
+    // Now compute the radians to the point to see if
+    // it is in the bounds of the left and right radians
+    // First, get the shared origin of the rays.
+    Point origin = Origin({left, right});
+    float rad_to_p = Ray(origin, p).radians();
+
+    return left.radians() <= rad_to_p && rad_to_p <= right.radians();
 }
