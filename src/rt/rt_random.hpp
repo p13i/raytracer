@@ -1,7 +1,5 @@
-#ifndef rt_random_hpp
-#define rt_random_hpp
-
-#include <random>
+#ifndef RT_RANDOM_HPP
+#define RT_RANDOM_HPP
 
 namespace rt {
 namespace random {
@@ -9,4 +7,4 @@ float randF();
 }
 }  // namespace rt
 
-#endif  // rt_random_hpp
+#endif  // RT_RANDOM_HPP

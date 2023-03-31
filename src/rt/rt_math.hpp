@@ -1,5 +1,5 @@
-#ifndef rt_math_hpp
-#define rt_math_hpp
+#ifndef RT_MATH_HPP
+#define RT_MATH_HPP
 
 // Source: https://stackoverflow.com/a/507879
 #define RT_PI \
@@ -9,7 +9,7 @@ namespace rt {
 
 namespace math {
 
-float sinusodal(float freqencyHz, float phase);
+float sinusodal(float frequencyHz, float phase);
 
 bool inrange(float a, float lower = 0., float upper = 1.);
 
@@ -17,4 +17,4 @@ bool inrange(float a, float lower = 0., float upper = 1.);
 
 }  // namespace rt
 
-#endif  // rt_math_hpp
+#endif  // RT_MATH_HPP

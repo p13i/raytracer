@@ -1,7 +1,5 @@
-#ifndef rt_trace_hpp
-#define rt_trace_hpp
-
-#include "rt_vector.hpp"
+#ifndef RT_TRACE_HPP
+#define RT_TRACE_HPP
 
 namespace rt {
 
@@ -13,10 +11,14 @@ struct Trace {
   bool isTerminal;
   struct Trace<T> *next;
 
-  Trace(T data, float luminance, bool isTerminal = false, Trace *next = nullptr)
-      : data(data), luminance(luminance), isTerminal(isTerminal), next(next) {}
+  Trace(T data, float luminance, bool isTerminal = false,
+        Trace *next = nullptr)
+      : data(data),
+        luminance(luminance),
+        isTerminal(isTerminal),
+        next(next) {}
 };
 
 }  // namespace rt
 
-#endif /* rt_trace_hpp */
+#endif  // RT_TRACE_HPP

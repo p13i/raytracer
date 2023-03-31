@@ -5,8 +5,10 @@
 #include "rt_ray.hpp"
 #include "rt_settings.hpp"
 
-bool rt::Geometry::intersection(Ray start, Point& intersectionPoint,
-                                LineSegment& intersectedEdge) {
+// TODO make this algorithm not cringe
+bool rt::Geometry::intersection(
+    Ray start, Point& intersectionPoint,
+    LineSegment& intersectedEdge) const {
   float time = 0;
 
   bool intersection = false;
@@ -15,15 +17,18 @@ bool rt::Geometry::intersection(Ray start, Point& intersectionPoint,
 
     // Find first intersection via ray marching
     for (LineSegment edge : this->edges) {
-      if (geo::intersection(edge, {start.origin, marchedRayPoint},
+      if (geo::intersection(edge,
+                            {start.origin, marchedRayPoint},
                             intersectionPoint)) {
         float rayOriginToIxnPointDist =
             geo::dist(start.origin, intersectionPoint);
         float marchedPtToIxnPointDistance =
             geo::dist(marchedRayPoint, intersectionPoint);
 
-        // Make sure the ray was facing to the intersection point
-        if (rayOriginToIxnPointDist > marchedPtToIxnPointDistance) {
+        // Make sure the ray was facing to the intersection
+        // point
+        if (rayOriginToIxnPointDist >
+            marchedPtToIxnPointDistance) {
           intersection = true;
           intersectedEdge = edge;
           break;

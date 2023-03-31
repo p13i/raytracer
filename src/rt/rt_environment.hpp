@@ -1,22 +1,22 @@
-#ifndef rt_environment_hpp
-#define rt_environment_hpp
+#ifndef RT_ENVIRONMENT_HPP
+#define RT_ENVIRONMENT_HPP
 
 #include <utility>
-#include <vector>
 
 #include "rt_geometry.hpp"
 
-using namespace std;
-using namespace rt;
-
 namespace rt {
 
+using namespace std;
+
+// Defines components of a scene's environment which currently only includes geometry
 struct Environment {
   Geometry mGeometry;
 
-  Environment(Geometry geo) : mGeometry(std::move(geo)) {}
+  Environment(Geometry geo)
+      : mGeometry(std::move(geo)) {}
 };
 
 }  // namespace rt
 
-#endif /* rt_environment_hpp */
+#endif // RT_ENVIRONMENT_HPP

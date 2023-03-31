@@ -5,10 +5,10 @@
 
 namespace rt {
 
-////////////////////////////////////////////////////////////
 /// Represents a beam with finite bounds.
 struct Beam {
-  Vector mBoundA, mBoundB;
+  Vector mBoundA;
+  Vector mBoundB;
 
   Beam(const Vector mBoundA, const Vector mBoundB)
       : mBoundA(mBoundA), mBoundB(mBoundB) {}

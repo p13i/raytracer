@@ -1,11 +1,9 @@
-#ifndef rt_vector_hpp
-#define rt_vector_hpp
+#ifndef RT_VECTOR_HPP
+#define RT_VECTOR_HPP
 
-#include <cmath>
 #include <ostream>
 
 #include "rt_linesegment.hpp"
-#include "rt_math.hpp"
 #include "rt_point.hpp"
 
 namespace rt {
@@ -15,11 +13,14 @@ struct Vector {
 
   Vector(Point dest) : origin({0, 0}), dest(dest) {}
 
-  Vector(Point orig, Point dest) : origin(orig), dest(dest) {}
+  Vector(Point orig, Point dest)
+      : origin(orig), dest(dest) {}
 
   Point _direction() const { return dest - origin; }
 
-  Vector unit() const { return {_direction() / magnitude()}; }
+  Vector unit() const {
+    return {_direction() / magnitude()};
+  }
 
   LineSegment lineSegment() const { return {origin, dest}; }
 
@@ -30,15 +31,11 @@ struct Vector {
 
   Vector operator*(float scalar) const {
     auto newDest = origin + (dest - origin) * scalar;
-    return Vector(origin, newDest);
+    return {origin, newDest};
   }
 
-  bool operator==(Vector other) {
-    return origin == other.origin && dest == other.dest;
-  }
-
-  Vector operator-(Vector other) {
-    return Vector(origin - other.origin, dest - other.dest);
+  Vector operator-(Vector other) const {
+    return {origin - other.origin, dest - other.dest};
   }
 };
 
@@ -48,10 +45,13 @@ rt::Vector operator*(int scalar, rt::Vector vec);
 
 rt::Vector operator*(float scalar, rt::Vector vec);
 
-std::ostream& operator<<(std::ostream& os, const rt::Vector& vec);
+std::ostream& operator<<(std::ostream& os,
+                         const rt::Vector& vec);
 
-bool operator==(const rt::Vector& first, const rt::Vector& second);
+bool operator==(const rt::Vector& first,
+                const rt::Vector& second);
 
-bool operator!=(const rt::Vector& first, const rt::Vector& second);
+bool operator!=(const rt::Vector& first,
+                const rt::Vector& second);
 
-#endif /* rt_vector_hpp */
+#endif  // RT_VECTOR_HPP

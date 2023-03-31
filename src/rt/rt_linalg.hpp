@@ -1,30 +1,23 @@
-//
-//  rt_linalg.hpp
-//  raytracer
-//
-//  Created by Pramod Kotipalli on 7/31/21.
-//
-
-#ifndef rt_linalg_hpp
-#define rt_linalg_hpp
-
-#include "rt_settings.hpp"
-#include "rt_vector.hpp"
+#ifndef RT_LINALG_HPP
+#define RT_LINALG_HPP
 
 namespace rt {
 namespace linalg {
 
+// Standard 2x2 matrix
 // | a b |
 // | c d |
 struct Matrix2x2 {
   float a, b, c, d;
 
-  Matrix2x2(float a, float b, float c, float d) : a(a), b(b), c(c), d(d) {}
+  Matrix2x2(float a, float b, float c, float d)
+      : a(a), b(b), c(c), d(d) {}
 
+  // Standard matrix determinant, (a * d) - (b * c)
   float determinant() const;
 };
 
 }  // namespace linalg
 }  // namespace rt
 
-#endif /* rt_linalg_hpp */
+#endif  // RT_LINALG_HPP

@@ -1,10 +1,8 @@
 #include "rt_ray.hpp"
 
-using namespace rt;
+#include "rt_math.hpp"
 
-Point Ray::operator()(float time) const {
-  return origin + (direction * time).dest;
-}
+using namespace rt;
 
 float Ray::radians() const {
   auto dir = direction.unit().dest;
@@ -17,12 +15,19 @@ float Ray::radians() const {
 
   return theta;
 }
+
+Point Ray::operator()(float time) const {
+  return origin + (direction * time).dest;
+}
+
 std::ostream& operator<<(std::ostream& os, const Ray& ray) {
-  return os << "Ray(origin=" << ray.origin << ", direction=" << ray.direction
-            << ")";
-};
+  return os << "Ray(origin=" << ray.origin
+            << ", direction=" << ray.direction << ")";
+}
+
 bool operator==(const Ray& first, const Ray& second) {
-  return first.origin == second.origin && first.direction == second.direction;
+  return first.origin == second.origin &&
+         first.direction == second.direction;
 }
 
 bool operator!=(const Ray& first, const Ray& second) {

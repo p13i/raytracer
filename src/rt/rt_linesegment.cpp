@@ -1,16 +1,17 @@
 #include "rt_linesegment.hpp"
 
-std::ostream& operator<<(std::ostream& os, const rt::LineSegment& edge) {
-  os << "LineSegment(";
-  os << edge.a;
-  os << ", " << edge.b << ')';
-  return os;
+std::ostream& operator<<(std::ostream& os,
+                         const rt::LineSegment& edge) {
+  return os << "LineSegment(" << edge.a << ", " << edge.b
+            << ')';
 }
 
-bool rt::LineSegment::operator==(LineSegment other) const {
-  return this->a == other.a && this->b == other.b;
-}
+bool operator==(const rt::LineSegment& this_,
+                const rt::LineSegment& other) {
+  return this_.a == other.a && this_.b == other.b;
+};
 
-bool rt::LineSegment::operator!=(LineSegment other) const {
-  return !(*this == other);
+bool operator!=(const rt::LineSegment& this_,
+                const rt::LineSegment& other) {
+  return !(this_ == other);
 }

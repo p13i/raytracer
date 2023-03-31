@@ -1,10 +1,3 @@
-//
-//  rt_linalg_tests.cpp
-//  raytracer
-//
-//  Created by Pramod Kotipalli on 2/5/22.
-//
-
 #include "gtest.h"
 #include "rt_linalg.hpp"
 

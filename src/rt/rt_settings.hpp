@@ -1,5 +1,5 @@
-#ifndef rt_settings_hpp
-#define rt_settings_hpp
+#ifndef RT_SETTINGS_HPP
+#define RT_SETTINGS_HPP
 
 #include "rt_math.hpp"
 
@@ -11,4 +11,4 @@
 #define RT_NUM_RAYS (2 << 3)
 #define RT_SMALL_INF 10000.f
 
-#endif  // rt_settings_hpp
+#endif  // RT_SETTINGS_HPP

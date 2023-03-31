@@ -1,64 +1,31 @@
 #include "ofApp.h"
 
-#include <algorithm>
-#include <cstdio>
 #include <ctime>
-#include <tuple>
 
+#include "data/data_scenes.hpp"
 #include "rt_math.hpp"
 #include "rt_settings.hpp"
 #include "rt_str.hpp"
 
-using namespace std;
-using namespace rt;
-
 void ofApp::setup() {
-  mAppSetupTime = time(nullptr);
-  mEnvironmentChangedTime = mAppSetupTime;
+  app_setup_time_ = time(nullptr);
+  environment_changed_time_ = app_setup_time_;
 
   ofBackground(0, 0, 0);  // black
 
+  // Frame rate
   ofSetFrameRate(APP_FRAME_RATE);
 
-  string windowTitle =
-      str::format("Raycaster (depth=%d, spread=%.2f, n=%d)", RT_MAX_DEPTH,
-                  RT_SPREAD_RADIANS, RT_NUM_RAYS);
+  ofSetWindowTitle(rt::str::format(
+      "Raycaster (depth=%d, spread=%.2f, n=%d)",
+      RT_MAX_DEPTH, RT_SPREAD_RADIANS, RT_NUM_RAYS));
 
-  ofSetWindowTitle(windowTitle);
+  for (auto &scene : data::scenes::SCENES) {
+    geometries_list_.push_back(
+        scene.environment_.mGeometry);
+  }
 
-  // Geometry #1
-  mGeometriesList.emplace_back(Geometry(vector<LineSegment>{
-      {{-100, -100}, {-100, +100}}, {{-200, -100}, {-200, +100}},
-      //        LineSegment{{-300, -100}, {-300, +100}},
-  }));
-
-  // Geometry #2
-  mGeometriesList.emplace_back(Geometry(vector<LineSegment>{
-      {{-200, +100}, {-100, +200}},
-      {{0, +100}, {+100, +100}},
-      {{+100, +100}, {+200, -100}},
-      {{+100, -100}, {-100, -200}},
-      {{-100, -100}, {-100, 0}},
-      {{25, 0}, {25, 50}},
-      {{-50, +50}, {-100, 0}},
-      {{+50, -50}, {+75, 0}},
-
-      {{-200, +200}, {+200, +200}},
-      {{+200, +200}, {+200, -200}},
-      {{+200, -200}, {-200, -200}},
-
-      {{-400, -400}, {-400, +400}},
-      {{-400, +400}, {+400, +400}},
-      {{+400, +400}, {+400, -400}},
-      {{+400, -400}, {-400, -400}},
-
-      {{-300, +300}, {+300, +300}},
-      {{+300, +300}, {+300, -300}},
-      {{+300, -300}, {+300, -300}},
-  }));
-
-  Environment env{mGeometriesList[0]};
-  mRayTracer = RayTracer{env};
+  raytracer_ = rt::RayTracer{geometries_list_[0]};
 
 #if APP_ENABLE_AUDIO
   // Audio
@@ -79,13 +46,15 @@ void ofApp::setup() {
 #endif  // APP_ENABLE_AUDIO
 }
 
-//--------------------------------------------------------------
 void ofApp::update() {
 #if APP_ENABLE_AUDIO
   // Write to the audio buffer
-  size_t numSamplesForUpdate = APP_AUDIO_SAMPLE_RATE / APP_FRAME_RATE;
+  size_t numSamplesForUpdate =
+      APP_AUDIO_SAMPLE_RATE / APP_FRAME_RATE;
   for (size_t i = 0; i < numSamplesForUpdate; i++) {
-    float phase = (float)mSoundBufferWriteIndex / (float)APP_AUDIO_RATE;
+    float phase =
+        static_cast<float>(mSoundBufferWriteIndex) /
+        static_cast<float>(APP_AUDIO_RATE);
 
     assert(0.f <= phase && phase <= 1.f);
 
@@ -105,12 +74,13 @@ void ofApp::update() {
     value += 1;
     value /= 2;
 
-    mMutex.lock();
+    sound_buffer_mutex_.lock();
     {
       mSoundBuffer[mSoundBufferWriteIndex] = value;
-      mSoundBufferWriteIndex = (mSoundBufferWriteIndex + 1) % APP_AUDIO_RATE;
+      mSoundBufferWriteIndex =
+          (mSoundBufferWriteIndex + 1) % APP_AUDIO_RATE;
     }
-    mMutex.unlock();
+    sound_buffer_mutex_.unlock();
   }
 #endif  // APP_ENABLE_AUDIO
 }
@@ -118,25 +88,33 @@ void ofApp::update() {
 //--------------------------------------------------------------
 void ofApp::draw() {
   if (ofGetMousePressed()) {
-    ofVec2f mousePosition = ofVec2f(ofGetMouseX(), ofGetMouseY());
-    mPlayerPointingAt = {mousePosition.x - DRAW_WINDOW_WIDTH / 2,
-                         -1 * (mousePosition.y - DRAW_WINDOW_HEIGHT / 2.f)};
-    mEnvironmentChanged = true;
-    mEnvironmentChangedTime = time(nullptr);
+    ofVec2f mousePosition =
+        ofVec2f(static_cast<float>(ofGetMouseX()),
+                static_cast<float>(ofGetMouseY()));
+    player_pointing_at_ = {
+        mousePosition.x - APP_DRAW_WINDOW_WIDTH / 2,
+        -1 * (mousePosition.y -
+              APP_DRAW_WINDOW_HEIGHT / 2.f)};
+    environment_changed_ = true;
+    environment_changed_time_ = time(nullptr);
   }
 
-  Ray startingRay({mPlayerLocation.x, mPlayerLocation.y},
-                  {mPlayerPointingAt.x, mPlayerPointingAt.y});
+  rt::Ray startingRay(
+      {player_location_.x, player_location_.y},
+      {player_pointing_at_.x, player_pointing_at_.y});
 
-  if (mEnvironmentChanged) {
-    mCachedPaths = mRayTracer.cast(startingRay, RT_SPREAD_RADIANS, RT_NUM_RAYS,
-                                   RT_MAX_DEPTH);
+  if (environment_changed_) {
+    cached_paths_ =
+        raytracer_.cast(startingRay, RT_SPREAD_RADIANS,
+                        RT_NUM_RAYS, RT_MAX_DEPTH);
   }
 
   ofPushMatrix();
   {
-    // Center on (0, 0) with positive x-axis to the right and positive
-    ofTranslate((DRAW_WINDOW_WIDTH / 2), (DRAW_WINDOW_HEIGHT / 2));
+    // Center on (0, 0) with positive x-axis to the right
+    // and positive
+    ofTranslate((APP_DRAW_WINDOW_WIDTH / 2),
+                (APP_DRAW_WINDOW_HEIGHT / 2));
     ofRotateXDeg(180);
 
     // *****
@@ -148,161 +126,145 @@ void ofApp::draw() {
     ofSetColor(ofFloatColor(0.5, 0.5, 0.5));  // gray
 
     // Draw rows
-    for (int rowY = (DRAW_WINDOW_HEIGHT / 2);
-         rowY > (-1 * DRAW_WINDOW_HEIGHT / 2); rowY -= DRAW_GRID_SPACING_PX) {
+    for (int rowY = (APP_DRAW_WINDOW_HEIGHT / 2);
+         rowY > (-1 * APP_DRAW_WINDOW_HEIGHT / 2);
+         rowY -= APP_DRAW_GRID_SPACING_PX) {
       ofSetLineWidth(1);
-      ofDrawLine((-1 * DRAW_WINDOW_WIDTH / 2), (rowY),
-                 (+1 * DRAW_WINDOW_WIDTH / 2), (rowY));
+      ofDrawLine((-1 * APP_DRAW_WINDOW_WIDTH / 2), (rowY),
+                 (+1 * APP_DRAW_WINDOW_WIDTH / 2), (rowY));
     }
 
     // Draw columns
-    for (int colX = (DRAW_WINDOW_WIDTH / 2);
-         colX > (-1 * DRAW_WINDOW_WIDTH / 2); colX -= DRAW_GRID_SPACING_PX) {
+    for (int colX = (APP_DRAW_WINDOW_WIDTH / 2);
+         colX > (-1 * APP_DRAW_WINDOW_WIDTH / 2);
+         colX -= APP_DRAW_GRID_SPACING_PX) {
       ofSetLineWidth(1);
-      ofDrawLine((colX), (-1 * DRAW_WINDOW_HEIGHT / 2), (colX),
-                 (+1 * DRAW_WINDOW_HEIGHT / 2));
+      ofDrawLine((colX), (-1 * APP_DRAW_WINDOW_HEIGHT / 2),
+                 (colX), (+1 * APP_DRAW_WINDOW_HEIGHT / 2));
     }
 
     // Draw x-axis
     ofSetLineWidth(2);
     ofSetColor(ofFloatColor(1, 0, 0));
-    ofDrawLine((0), (0), (DRAW_GRID_SPACING_PX / 8), (0));
+    ofDrawLine((0), (0), (APP_DRAW_GRID_SPACING_PX / 8),
+               (0));
 
     // Draw y-axis
     ofSetLineWidth(2);
     ofSetColor(ofFloatColor(0, 1, 0));
-    ofDrawLine((0), (0), (0), (DRAW_GRID_SPACING_PX / 8));
+    ofDrawLine((0), (0), (0),
+               (APP_DRAW_GRID_SPACING_PX / 8));
 
     // Draw mGeometry's edges
 
-    rtDraw(mRayTracer.mEnvironment);
+    rtDraw(raytracer_.mEnvironment);
 
     // Draw ray traces
 
-    rtDraw(mCachedPaths);
+    rtDrawTraceOfVectors(cached_paths_);
 
-    vector<Trace<Beam *> *> beams =
-        mRayTracer.beamCast(startingRay, RT_SPREAD_RADIANS, 2);
+    vector<rt::Trace<rt::Beam *> *> beams =
+        raytracer_.beamCast(startingRay, RT_SPREAD_RADIANS,
+                            2);
 
     // Draw beams
 
-    rtDraw(beams);
+    rtDrawTracesOfBeams(beams);
 
     // Draw source ray
 
-    rtDraw(startingRay, mPlayerPointingAt);
+    rtDraw(startingRay, player_pointing_at_);
 
     // Draw metadata
     rtDrawMetadata();
   }
   ofPopMatrix();
 
-  mEnvironmentChanged = false;
+  environment_changed_ = false;
 
   // Update time variables
-  mFrameNum = (mFrameNum + 1) % APP_FRAME_RATE;
-  mTotalFrameNum++;
+  frame_num_ = (frame_num_ + 1) % APP_FRAME_RATE;
+  total_frame_num_++;
 
-  mFpsCounter.newFrame();
+  fps_counter_.newFrame();
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key) {
-  if (key == OF_KEY_LEFT || key == OF_KEY_RIGHT || key == OF_KEY_UP ||
-      key == OF_KEY_DOWN) {
-    ofVec2f oldSourcePoint = mPlayerLocation;
-    const int step = 10;
+  if (key == OF_KEY_LEFT || key == OF_KEY_RIGHT ||
+      key == OF_KEY_UP || key == OF_KEY_DOWN) {
+    ofVec2f oldSourcePoint = player_location_;
+    constexpr int step = 10;
     if (key == OF_KEY_LEFT) {
-      mPlayerLocation.x -= step;
+      player_location_.x -= step;
     } else if (key == OF_KEY_RIGHT) {
-      mPlayerLocation.x += step;
+      player_location_.x += step;
     } else if (key == OF_KEY_UP) {
-      mPlayerLocation.y += step;
+      player_location_.y += step;
     } else if (key == OF_KEY_DOWN) {
-      mPlayerLocation.y -= step;
+      player_location_.y -= step;
     }
 
-    ofVec2f newSourcePoint = mPlayerLocation;
-    mPlayerPointingAt += (newSourcePoint - oldSourcePoint);
+    ofVec2f newSourcePoint = player_location_;
+    player_pointing_at_ +=
+        (newSourcePoint - oldSourcePoint);
 
-    mEnvironmentChanged = true;
+    environment_changed_ = true;
 
   } else if ('1' <= key && key <= '9') {
     size_t index = key - '1';
 
-    if (index < 0 || (index > (mGeometriesList.size() - 1))) {
+    if (index < 0 ||
+        (index > (geometries_list_.size() - 1))) {
       return;
     }
 
-    Geometry geo = mGeometriesList[index];
-    mRayTracer = RayTracer(Environment{geo});
+    rt::Geometry geo = geometries_list_[index];
+    raytracer_ = rt::RayTracer(rt::Environment{geo});
 
-    mEnvironmentChanged = true;
+    environment_changed_ = true;
   }
 }
-
-//--------------------------------------------------------------
-void ofApp::keyReleased(int key) {}
-
-//--------------------------------------------------------------
-void ofApp::mouseMoved(int x, int y) {}
-
-//--------------------------------------------------------------
-void ofApp::mouseDragged(int x, int y, int button) {}
-
-//--------------------------------------------------------------
-void ofApp::mousePressed(int x, int y, int button) {}
-
-//--------------------------------------------------------------
-void ofApp::mouseReleased(int x, int y, int button) {}
-
-//--------------------------------------------------------------
-void ofApp::mouseEntered(int x, int y) {}
-
-//--------------------------------------------------------------
-void ofApp::mouseExited(int x, int y) {}
-
-//--------------------------------------------------------------
-void ofApp::windowResized(int w, int h) {}
-
-//--------------------------------------------------------------
-void ofApp::gotMessage(ofMessage msg) {}
-
-//--------------------------------------------------------------
-void ofApp::dragEvent(ofDragInfo dragInfo) {}
 
 #if APP_ENABLE_AUDIO
 //--------------------------------------------------------------
 void ofApp::audioOut(ofSoundBuffer &soundBuffer) {
-  mMutex.lock();
+  sound_buffer_mutex_.lock();
   {
     size_t bufferSize = soundBuffer.getNumFrames();
     size_t nChannels = soundBuffer.getNumChannels();
 
-    for (size_t i = 0; i < bufferSize * nChannels; i += nChannels) {
+    for (size_t i = 0; i < bufferSize * nChannels;
+         i += nChannels) {
       for (size_t c = 0; c < nChannels; c++) {
-        soundBuffer[i + c] = mSoundBuffer[mSoundBufferReadIndex];
+        soundBuffer[i + c] =
+            mSoundBuffer[mSoundBufferReadIndex];
       }
       mSoundBufferReadIndex =
-          (mSoundBufferReadIndex + nChannels) % APP_AUDIO_RATE;
+          (mSoundBufferReadIndex + nChannels) %
+          APP_AUDIO_RATE;
     }
   }
-  mMutex.unlock();
+  sound_buffer_mutex_.unlock();
 }
 #endif  // APP_ENABLE_AUDIO
 
-void ofApp::rtDraw(vector<Trace<Vector> *> traces) {
+void ofApp::rtDrawTraceOfVectors(
+    std::vector<rt::Trace<rt::Vector> *> traces) {
   ofSetColor(ofFloatColor(1, 1, 1, 0.5));  // clear white
-  for (Trace<Vector> *trace : traces) {
-    // Draw out rays with diminishiong power (i.e. lineWidth)
+  for (rt::Trace<rt::Vector> *trace : traces) {
+    // Draw out rays with diminishiong power (i.e.
+    // lineWidth)
     float lineWidth = 8;
     while (trace != nullptr && lineWidth > 0.) {
       ofSetLineWidth(lineWidth);
-      ofDrawLine(trace->data.origin.x, trace->data.origin.y, trace->data.dest.x,
-                 trace->data.dest.y);
+      ofDrawLine(trace->data.origin.x, trace->data.origin.y,
+                 trace->data.dest.x, trace->data.dest.y);
       // Round caps on ray ends
-      ofDrawCircle((trace->data.origin.x), (trace->data.origin.y), 4);
-      ofDrawCircle((trace->data.dest.x), (trace->data.dest.y), 4);
+      ofDrawCircle((trace->data.origin.x),
+                   (trace->data.origin.y), 4);
+      ofDrawCircle((trace->data.dest.x),
+                   (trace->data.dest.y), 4);
 
       // Move forward
       lineWidth *= lineWidth > 0.000001 ? 0.9 : 0.;
@@ -311,10 +273,11 @@ void ofApp::rtDraw(vector<Trace<Vector> *> traces) {
   }
 }
 
-void ofApp::rtDraw(Ray startingRay, ofVec2f lookingAt) {
+void ofApp::rtDraw(rt::Ray startingRay, ofVec2f lookingAt) {
   ofSetColor(ofColor(128, 0, 128));  // purple
 
-  ofDrawCircle((startingRay.origin.x), (startingRay.origin.y), 4);
+  ofDrawCircle((startingRay.origin.x),
+               (startingRay.origin.y), 4);
 
   ofSetLineWidth(2);
   ofDrawLine((startingRay.origin.x), (startingRay.origin.y),
@@ -325,11 +288,13 @@ void ofApp::rtDraw(Ray startingRay, ofVec2f lookingAt) {
   ofDrawCircle(lookingAt.x, lookingAt.y, 2);
 }
 
-void ofApp::rtDraw(vector<Trace<Beam *> *> traces) {
+void ofApp::rtDrawTracesOfBeams(
+    vector<rt::Trace<rt::Beam *> *> traces) {
   srand(42);
 
-  for (Trace<Beam *> *beamTrace : traces) {
-    Vector a = beamTrace->data->mBoundA, b = beamTrace->data->mBoundB;
+  for (rt::Trace<rt::Beam *> *beamTrace : traces) {
+    rt::Vector a = beamTrace->data->mBoundA,
+               b = beamTrace->data->mBoundB;
 
     ofSetLineWidth(1);
     ofPath path = ofPath();
@@ -337,21 +302,23 @@ void ofApp::rtDraw(vector<Trace<Beam *> *> traces) {
     path.lineTo(a.dest.x, a.dest.y);
     path.lineTo(b.dest.x, b.dest.y);
     path.lineTo(b.origin.x, b.origin.y);
-    ofColor color = ofFloatColor(random::randF(), random::randF(),
-                                 random::randF(), 0.5);  // random
+    ofColor color = ofFloatColor(
+        rt::random::randF(), rt::random::randF(),
+        rt::random::randF(), 0.5);  // random
     path.setFillColor(color);
     path.draw();
   }
 }
 
-void ofApp::rtDraw(Environment env) {
-  for (const LineSegment &edge : env.mGeometry.edges) {
+void ofApp::rtDraw(rt::Environment env) const {
+  for (const rt::LineSegment &edge : env.mGeometry.edges) {
     ofSetColor(ofFloatColor(1, 0, 0));
 
     ofSetLineWidth(4);
 
     // The edge from a to b
-    ofDrawLine((edge.a.x), (edge.a.y), (edge.b.x), (edge.b.y));
+    ofDrawLine((edge.a.x), (edge.a.y), (edge.b.x),
+               (edge.b.y));
 
     // Round caps on wall ends
     ofDrawCircle((edge.a.x), (edge.a.y), 2);
@@ -359,19 +326,22 @@ void ofApp::rtDraw(Environment env) {
   }
 }
 
-void ofApp::rtDrawMetadata() {
-  float fps = mFpsCounter.fps();
-  string metaFormatString = str::format("Frame: %02d/%02d\nFPS:   %.3f\n",
-                                        mFrameNum, APP_FRAME_RATE, fps);
+void ofApp::rtDrawMetadata() const {
+  float fps = fps_counter_.fps();
+  string metaFormatString =
+      rt::str::format("Frame: %02d/%02d\nFPS:   %.3f\n",
+                      frame_num_, APP_FRAME_RATE, fps);
 
-  if (!mEnvironmentChanged) {
-    string frameString = str::format("Last draw: %d (sec)",
-                                     time(nullptr) - mEnvironmentChangedTime);
+  if (!environment_changed_) {
+    string frameString = rt::str::format(
+        "Last draw: %d (sec)",
+        time(nullptr) - environment_changed_time_);
     metaFormatString += frameString;
   } else {
     metaFormatString += "Calculating...";
   }
 
-  ofDrawBitmapString(metaFormatString, DRAW_WINDOW_WIDTH / 2 - 200,
-                     -DRAW_WINDOW_HEIGHT / 2 + 50);
+  ofDrawBitmapString(metaFormatString,
+                     APP_DRAW_WINDOW_WIDTH / 2 - 200,
+                     -APP_DRAW_WINDOW_HEIGHT / 2 + 50);
 }

@@ -1,9 +1,7 @@
-#ifndef rt_point_hpp
-#define rt_point_hpp
+#ifndef RT_POINT_HPP
+#define RT_POINT_HPP
 
 #include <ostream>
-
-#include "rt_settings.hpp"
 
 namespace rt {
 
@@ -33,4 +31,4 @@ struct Point {
 
 std::ostream &operator<<(std::ostream &os, const rt::Point &point);
 
-#endif /* rt_point_hpp */
+#endif // RT_POINT_HPP

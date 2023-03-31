@@ -1,5 +1,5 @@
-#ifndef rt_geometry_hpp
-#define rt_geometry_hpp
+#ifndef RT_GEOMETRY_HPP
+#define RT_GEOMETRY_HPP
 
 #include <vector>
 
@@ -8,17 +8,21 @@
 
 namespace rt {
 
+// Contains the discrete geometry for a scene. Currently,
+// only consists of line segments.
 struct Geometry {
+  // Walls
   std::vector<LineSegment> edges;
 
   Geometry() : Geometry(std::vector<LineSegment>()) {}
 
-  Geometry(std::vector<LineSegment> edges) : edges(edges) {}
+  explicit Geometry(std::vector<LineSegment> edges)
+      : edges(std::move(edges)) {}
 
   bool intersection(Ray start, Point &intersectionPoint,
-                    LineSegment &intersectedEdge);
+                    LineSegment &intersectedEdge) const;
 };
 
 }  // namespace rt
 
-#endif /* rt_geometry_hpp */
+#endif  // RT_GEOMETRY_HPP

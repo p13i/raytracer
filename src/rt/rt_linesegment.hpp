@@ -1,24 +1,25 @@
-#ifndef rt_linesegment_hpp
-#define rt_linesegment_hpp
+#ifndef RT_LINESEGMENT_HPP
+#define RT_LINESEGMENT_HPP
 
 #include "rt_point.hpp"
 
 namespace rt {
 
+// Standard finite line bounded by two points
 struct LineSegment {
   Point a, b;
 
   LineSegment() : LineSegment(Point(), Point()) {}
 
   LineSegment(Point a, Point b) : a(a), b(b) {}
-
-  bool operator==(LineSegment other) const;
-
-  bool operator!=(LineSegment other) const;
 };
-
-// bool operator == (const LineSegment& this_, const LineSegment& that);
 
 }  // namespace rt
 
-#endif  // rt_linesegment_hpp
+bool operator==(const rt::LineSegment& this_,
+                const rt::LineSegment& other);
+
+bool operator!=(const rt::LineSegment& this_,
+                const rt::LineSegment& other);
+
+#endif  // RT_LINESEGMENT_HPP

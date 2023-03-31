@@ -14,7 +14,6 @@
 
 namespace rt {
 
-////////////////////////////////////////////////////////////
 /// Encapsulates the core algorithm of a "beam caster"
 /// Based in large part by Hanrahan et al.'s 1984 paper
 /// "Beam Tracing Polygonal Objects". This class (and the
@@ -27,26 +26,33 @@ class RayTracer {
   // Default constructor
   RayTracer() : RayTracer({{}}) {}
   // Main constructor
-  RayTracer(Environment environment) : mEnvironment(std::move(environment)) {}
+  explicit RayTracer(Environment environment)
+      : mEnvironment(std::move(environment)) {}
   Trace<Vector>* trace(Ray start, unsigned int depth = 1);
-  vector<Trace<Vector>*> cast(Ray start, float spreadRadians,
-                              unsigned int spreadCount, unsigned int depth = 1);
-  vector<Trace<Beam*>*> beamCast(Ray start, float spreadRadians,
-                                 unsigned int depth = 1);
-  vector<Trace<Beam*>*> beamCast2(Ray start, float spreadRadians,
+  vector<Trace<Vector>*> cast(Ray start,
+                              float spreadRadians,
+                              unsigned int spreadCount,
+                              unsigned int depth = 1);
+  vector<Trace<Beam*>*> beamCast(Ray start,
+                                 float spreadRadians,
+                                 unsigned int depth = 1)const;
+  vector<Trace<Beam*>*> beamCast2(Ray start,
+                                  float spreadRadians,
                                   unsigned int depth = 1);
 };
 
-// Helper functions ////////////////////////////////////////
+// Helper functions
 struct ProcessUnboundBeamsResult {
   // The edge of that formed these beams
   LineSegment L_closest_processed;
-  std::vector<Beam> C;                    // completed beams
-  std::vector<UnboundBeam> next_u_beams;  // resulting from function
+  std::vector<Beam> C;  // completed beams
+  std::vector<UnboundBeam>
+      next_u_beams;  // resulting from function
 };
 
 ProcessUnboundBeamsResult ProcessUnboundBeam(
-    const UnboundBeam& u_beam, const std::vector<LineSegment>& env_edges);
+    const UnboundBeam& u_beam,
+    const std::vector<LineSegment>& env_edges);
 }  // namespace rt
 
 #endif  // RT_RAYTRACER_HPP

@@ -1,13 +1,6 @@
-//
-//  rt_tests.cpp
-//  raytracer
-//
-//  Created by Pramod Kotipalli on 2/3/22.
-//
-
 #include "rt_tests.hpp"
 
-#include <stdio.h>
+#include <cstdio>
 
 #include "gtest.h"
 

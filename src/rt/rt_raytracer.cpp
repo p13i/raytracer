@@ -14,37 +14,35 @@
 using namespace std;
 using namespace rt;
 
-Trace<Vector>* RayTracer::trace(Ray start, unsigned int depth) {
-  // std::cout << start << " (" << depth << ")" << std::endl;
-
+Trace<Vector>* RayTracer::trace(Ray start,
+                                unsigned int depth) {
   if (depth == 0) {
     return nullptr;
   }
-
-  // std::cout << "depth > 0" << std::endl;
 
   Trace<Vector>* startTrace = nullptr;
 
   Point intersectionPoint;
   LineSegment intersectedEdge;
-  bool intersection = this->mEnvironment.mGeometry.intersection(
-      start, intersectionPoint, intersectedEdge);
+  bool intersection =
+      this->mEnvironment.mGeometry.intersection(
+          start, intersectionPoint, intersectedEdge);
 
   if (intersection) {
-    // std::cout << "Intersection." << std::endl;
-
     Vector forwardTrace(start.origin, intersectionPoint);
     startTrace = new Trace<Vector>(forwardTrace, 1.0);
 
     // recurse on the reflected ray
 
-    // reflect forwardTrace vector over intersectedEdge's normal
-    Ray reflectedRay = geo::reflect(forwardTrace, intersectedEdge);
+    // reflect forwardTrace vector over intersectedEdge's
+    // normal
+    Ray reflectedRay =
+        geo::reflect(forwardTrace, intersectedEdge);
 
-    Trace<Vector>* subTrace = this->trace(reflectedRay, depth - 1);
+    Trace<Vector>* subTrace =
+        this->trace(reflectedRay, depth - 1);
 
     if (subTrace) {
-      // std::cout << "Subtrace:" << subTrace->vec << std::endl;
       startTrace->next = subTrace;
     }
   }
@@ -52,16 +50,17 @@ Trace<Vector>* RayTracer::trace(Ray start, unsigned int depth) {
   return startTrace;
 }
 
-std::vector<Trace<Vector>*> RayTracer::cast(Ray start, float spreadRadians,
-                                            unsigned int spreadCount,
-                                            unsigned int depth) {
+std::vector<Trace<Vector>*> RayTracer::cast(
+    Ray start, float spreadRadians,
+    unsigned int spreadCount, unsigned int depth) {
   std::vector<Trace<Vector>*> casts;
 
   float startRadians = start.radians();
 
   float radianOffset = -(spreadRadians / 2.f);
   for (unsigned int i = 0; i < spreadCount; i++) {
-    radianOffset += (spreadRadians / static_cast<float>(spreadCount));
+    radianOffset +=
+        (spreadRadians / static_cast<float>(spreadCount));
 
     float rayOffset = startRadians + radianOffset;
 
@@ -79,8 +78,9 @@ std::vector<Trace<Vector>*> RayTracer::cast(Ray start, float spreadRadians,
   return casts;
 }
 
-std::vector<Trace<Beam*>*> RayTracer::beamCast(Ray start, float spreadRadians,
-                                               unsigned int depth) {
+std::vector<Trace<Beam*>*> RayTracer::beamCast(
+    Ray start, float spreadRadians,
+    unsigned int depth) const {
   // Recursion base case
   if (depth == 0) {
     return {};
@@ -99,19 +99,23 @@ std::vector<Trace<Beam*>*> RayTracer::beamCast(Ray start, float spreadRadians,
   // 2. Create lines from the start to each point
   set<Point> allVisiblePointsSet;
   for (Point point : allPoints) {
-    // Only add lines that do not intersect with the mGeometry
+    // Only add lines that do not intersect with the
+    // mGeometry
 
     Ray intersectionStart(start.origin, point);
     Point intersectionPoint;
     LineSegment intersectedEdge;
     bool intersection = mEnvironment.mGeometry.intersection(
-        intersectionStart, intersectionPoint, intersectedEdge);
+        intersectionStart, intersectionPoint,
+        intersectedEdge);
 
     if (intersection) {
-      bool intersectA = (intersectionPoint == intersectedEdge.a) &&
-                        (intersectedEdge.a == point);
-      bool intersectB = (intersectionPoint == intersectedEdge.b) &&
-                        (intersectedEdge.b == point);
+      bool intersectA =
+          (intersectionPoint == intersectedEdge.a) &&
+          (intersectedEdge.a == point);
+      bool intersectB =
+          (intersectionPoint == intersectedEdge.b) &&
+          (intersectedEdge.b == point);
 
       if (intersectA || intersectB) {
         intersection = false;
@@ -133,7 +137,8 @@ std::vector<Trace<Beam*>*> RayTracer::beamCast(Ray start, float spreadRadians,
     visiblePoints.push_back(point);
   }
 
-  // 3.a Sort all the points by their distance from the start's origin
+  // 3.a Sort all the points by their distance from the
+  // start's origin
   sort(visiblePoints.begin(), visiblePoints.end(),
        [o](const Point& a, const Point& b) -> bool {
          float da = Vector(o, a).magnitude();
@@ -186,7 +191,8 @@ std::vector<Trace<Beam*>*> RayTracer::beamCast(Ray start, float spreadRadians,
     Vector boundA = beam->mBoundA;
     Vector boundB = beam->mBoundB;
 
-    LineSegment endOfBoundsOuterSegment{boundA.dest, boundB.dest};
+    LineSegment endOfBoundsOuterSegment{boundA.dest,
+                                        boundB.dest};
 
     bool shouldRemove = false;
 
@@ -196,14 +202,16 @@ std::vector<Trace<Beam*>*> RayTracer::beamCast(Ray start, float spreadRadians,
 
       Point intersectionPoint;
       if (geo::intersection(endOfBoundsOuterSegment,
-                            otherBeamBoundA.lineSegment(), intersectionPoint) &&
+                            otherBeamBoundA.lineSegment(),
+                            intersectionPoint) &&
           intersectionPoint != otherBeamBoundA.origin &&
           intersectionPoint != otherBeamBoundA.dest) {
         shouldRemove = true;
       }
 
       if (geo::intersection(endOfBoundsOuterSegment,
-                            otherBeamBoundB.lineSegment(), intersectionPoint) &&
+                            otherBeamBoundB.lineSegment(),
+                            intersectionPoint) &&
           intersectionPoint != otherBeamBoundB.origin &&
           intersectionPoint != otherBeamBoundB.dest) {
         shouldRemove = true;
@@ -217,7 +225,8 @@ std::vector<Trace<Beam*>*> RayTracer::beamCast(Ray start, float spreadRadians,
     }
   }
 
-  // Extend the current beams if both endpoints are on different edges
+  // Extend the current beams if both endpoints are on
+  // different edges
   for (Beam* beam : beams) {
     Vector boundA = beam->mBoundA, boundB = beam->mBoundB;
 
@@ -225,15 +234,17 @@ std::vector<Trace<Beam*>*> RayTracer::beamCast(Ray start, float spreadRadians,
     Point intersectionPointA;
     LineSegment intersectedEdgeA;
 
-    bool intersectionA = mEnvironment.mGeometry.intersection(
-        castRayA, intersectionPointA, intersectedEdgeA);
+    bool intersectionA =
+        mEnvironment.mGeometry.intersection(
+            castRayA, intersectionPointA, intersectedEdgeA);
 
     Ray castRayB{boundB.origin, boundB.dest};
     Point intersectionPointB;
     LineSegment intersectedEdgeB;
 
-    bool intersectionB = mEnvironment.mGeometry.intersection(
-        castRayA, intersectionPointA, intersectedEdgeA);
+    bool intersectionB =
+        mEnvironment.mGeometry.intersection(
+            castRayA, intersectionPointA, intersectedEdgeA);
 
     if (intersectedEdgeA == intersectedEdgeB) {
       // Perform a reflection
@@ -248,20 +259,23 @@ std::vector<Trace<Beam*>*> RayTracer::beamCast(Ray start, float spreadRadians,
     }
   }
 
-  // Transform the beams to traces and perform the recursion!!
+  // Transform the beams to traces and perform the
+  // recursion!!
 
   vector<Trace<Beam*>*> beamTraces;
   for (Beam* beam : beams) {
     Vector boundA = beam->mBoundA, boundB = beam->mBoundB;
 
-    beamTraces.push_back(new Trace<Beam*>(beam, 1.f, false, nullptr));
+    beamTraces.push_back(
+        new Trace<Beam*>(beam, 1.f, false, nullptr));
   }
 
   return beamTraces;
 }
 
 ProcessUnboundBeamsResult rt::ProcessUnboundBeam(
-    const UnboundBeam& u_beam, const std::vector<LineSegment>& env_edges) {
+    const UnboundBeam& u_beam,
+    const std::vector<LineSegment>& env_edges) {
   // Unpack some local variables
   Point b_o = Origin(u_beam);
   Ray b_l = u_beam.bound_a_;
@@ -283,8 +297,10 @@ ProcessUnboundBeamsResult rt::ProcessUnboundBeam(
 
   // Step 2: Order w by distance from B_o and select the
   // closest line segment as L_closest
-  sort(lines_within_u_beam.begin(), lines_within_u_beam.end(),
-       [b_o](const LineSegment& l_a, const LineSegment& l_b) -> bool {
+  sort(lines_within_u_beam.begin(),
+       lines_within_u_beam.end(),
+       [b_o](const LineSegment& l_a,
+             const LineSegment& l_b) -> bool {
          float da = min(Vector(b_o, l_a.a).magnitude(),
                         Vector(b_o, l_a.b).magnitude());
          float db = min(Vector(b_o, l_b.a).magnitude(),
@@ -296,9 +312,9 @@ ProcessUnboundBeamsResult rt::ProcessUnboundBeam(
 
   // Step 3: Trace line segments (actually Vectors) from B_o
   // to the endpoints of L_closest, a_l and a_r, S_1 and S_2
-  // We need to find the point on L_closest that is within the
-  // bounds of the beam. E.g., if L_closest.a is outside of
-  // the beam, then we need to find the point inside
+  // We need to find the point on L_closest that is within
+  // the bounds of the beam. E.g., if L_closest.a is outside
+  // of the beam, then we need to find the point inside
   Vector s_o_a{b_o, L_closest.a};
   Vector s_o_b{b_o, L_closest.b};
 
@@ -318,11 +334,12 @@ ProcessUnboundBeamsResult rt::ProcessUnboundBeam(
   // Done in caller by L_closest_processed being removed
 
   // Step 6: Construct shadow beams: S_a_l is bounded by B_l
-  // and a ray of (B_l spanning to A_l) to infinity, and S_b_r
-  // the right side of S_2. Repeat Steps 2 to 6 until no non-
-  // nil shadows are formed. C may have more beams now.
-  UnboundBeam S_a_l{b_l, s_o_a};
-  UnboundBeam S_b_r{b_r, s_o_b};
+  // and a ray of (B_l spanning to A_l) to infinity, and
+  // S_b_r the right side of S_2. Repeat Steps 2 to 6 until
+  // no non- nil shadows are formed. C may have more beams
+  // now.
+  UnboundBeam S_a_l{b_l, Ray(s_o_a)};
+  UnboundBeam S_b_r{b_r, Ray(s_o_b)};
 
   // Return result
   ProcessUnboundBeamsResult result;
@@ -340,8 +357,8 @@ ProcessUnboundBeamsResult rt::ProcessUnboundBeam(
 }
 ////////////////////////////////////////////////////////////
 ///
-std::vector<Trace<Beam*>*> RayTracer::beamCast2(Ray start, float spreadRadians,
-                                                unsigned int depth) {
+std::vector<Trace<Beam*>*> RayTracer::beamCast2(
+    Ray start, float spreadRadians, unsigned int depth) {
   // Step 1: Within the unbounded beam B, find all line
   // segments that are within the beam's bounds
   // (B_l, B_r).
@@ -352,8 +369,10 @@ std::vector<Trace<Beam*>*> RayTracer::beamCast2(Ray start, float spreadRadians,
   UnboundBeam u_beam{b_l, b_r};
 
   std::vector<Beam> C;  // completed beams
-  std::vector<LineSegment> env_edges = mEnvironment.mGeometry.edges;
-  ProcessUnboundBeamsResult result = ProcessUnboundBeam(u_beam, env_edges);
+  std::vector<LineSegment> env_edges =
+      mEnvironment.mGeometry.edges;
+  ProcessUnboundBeamsResult result =
+      ProcessUnboundBeam(u_beam, env_edges);
 
   for (const Beam& beam : result.C) {
     C.push_back(beam);
@@ -365,11 +384,14 @@ std::vector<Trace<Beam*>*> RayTracer::beamCast2(Ray start, float spreadRadians,
   std::copy_if(env_edges.begin(), env_edges.end(),
                std::back_inserter(edges_minus_last_closest),
                [result](LineSegment line_seg) {
-                 return line_seg != result.L_closest_processed;
+                 return line_seg !=
+                        result.L_closest_processed;
                });
-  for (const UnboundBeam& next_u_beam : result.next_u_beams) {
+  for (const UnboundBeam& next_u_beam :
+       result.next_u_beams) {
     ProcessUnboundBeamsResult next_result =
-        ProcessUnboundBeam(next_u_beam, edges_minus_last_closest);
+        ProcessUnboundBeam(next_u_beam,
+                           edges_minus_last_closest);
   }
 
   // Step 7: Reflect each beam in C and repeat Steps 1 to 7
