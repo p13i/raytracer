@@ -1,13 +1,38 @@
 #include "rt_geo.hpp"
 
+#include <cmath>
+
 #include "rt_linalg.hpp"
 #include "rt_math.hpp"
 #include "rt_ray.hpp"
+#include "rt_settings.hpp"
 #include "rt_unbound_beam.hpp"
 #include "rt_vector.hpp"
 
 using namespace std;
 using namespace rt;
+
+namespace {
+
+float Cross(Point a, Point b) {
+  return a.x * b.y - a.y * b.x;
+}
+
+bool PointOnRay(const Ray& ray, const Point& point) {
+  Point to_point = point - ray.origin;
+  if (to_point == Point{0, 0}) {
+    return true;
+  }
+
+  Point direction = ray.direction.unit().dest;
+  if (std::fabs(Cross(direction, to_point)) >= RT_EPSILON) {
+    return false;
+  }
+
+  return geo::dot(direction, to_point) >= -RT_EPSILON;
+}
+
+}  // namespace
 
 bool geo::intersection(LineSegment j, LineSegment k,
                        Point& intersectionPoint) {
@@ -104,6 +129,10 @@ bool geo::intersection_of_rays(Ray ray1, Ray ray2,
 
 bool geo::point_between_rays(const Ray& a, const Ray& b,
                              const Point& p) {
+  if (PointOnRay(a, p) || PointOnRay(b, p)) {
+    return true;
+  }
+
   // Assign the left and right variables to the
   // rays' orientations on a unit circle. A larger
   // radians theta means the ray is more to the left,
@@ -119,9 +148,14 @@ bool geo::point_between_rays(const Ray& a, const Ray& b,
   }
 
   // Now compute the radians to the point to see if
-  // it is in the bounds of the left and right radians
-  // First, get the shared origin of the rays.
-  Point origin = Origin({left, right});
+  // it is in the bounds of the left and right radians.
+  Point origin;
+  if (!intersection_of_rays(left, right, origin)) {
+    origin = Origin({left, right});
+  }
+  if (origin == p) {
+    return true;
+  }
   float rad_to_p = Ray(origin, p).radians();
 
   return left.radians() <= rad_to_p &&

@@ -40,7 +40,7 @@ TEST(RayTest, IntersectingRays) {
 }
 
 TEST(point_between_rays, base) {
-  Ray a{{-1, -1}, {}};
+  Ray a{{-1, -1}, Point{0, 0}};
   Ray b{{0, 1}, {1, 0}};
   Point p{0, 0};
   EXPECT_TRUE(point_between_rays(a, b, p));
